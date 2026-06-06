@@ -1,0 +1,165 @@
+/* Madras Prop Store clone styles */
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: #ffffff;
+  color: #1a1a1a;
+  letter-spacing: 0.01em;
+}
+
+.font-serif {
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 0.02em;
+}
+
+/* Announcement bar */
+.announcement-bar {
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Mega menu hover */
+.nav-item:hover .mega-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.mega-menu {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Product card image swap */
+.product-card .img-primary {
+  transition: opacity 400ms ease, transform 600ms ease;
+}
+.product-card:hover .img-primary {
+  opacity: 0;
+}
+.product-card .img-hover {
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.product-card:hover .img-hover {
+  opacity: 1;
+}
+.product-card:hover .quick-view-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+.product-card .quick-view-btn {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+
+/* Theme card overlay */
+.theme-card:hover img {
+  transform: scale(1.06);
+}
+.theme-card img {
+  transition: transform 700ms ease;
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 40s linear infinite;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+/* Hero slideshow */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 800ms ease;
+}
+.hero-slide.active { opacity: 1; }
+
+/* Hide scrollbar */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Button primary - light tone, not dark gradient */
+.btn-primary {
+  background: #1a1a1a;
+  color: #fff;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 14px 28px;
+  border: 1px solid #1a1a1a;
+  transition: background-color 250ms ease, color 250ms ease;
+}
+.btn-primary:hover {
+  background: #fff;
+  color: #1a1a1a;
+}
+.btn-outline {
+  background: transparent;
+  color: #fff;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 14px 28px;
+  border: 1px solid #fff;
+  transition: background-color 250ms ease, color 250ms ease;
+}
+.btn-outline:hover {
+  background: #fff;
+  color: #1a1a1a;
+}
+
+/* Section titles */
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: clamp(28px, 4vw, 44px);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* Sold-out / sale badges */
+.badge {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+}
+
+/* Nav underline */
+.nav-link {
+  position: relative;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -6px;
+  height: 1px;
+  background: #1a1a1a;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 250ms ease;
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* Drawer slide-in */
+.drawer-enter { transform: translateX(100%); }
+.drawer-enter-active { transform: translateX(0); transition: transform 300ms ease; }
