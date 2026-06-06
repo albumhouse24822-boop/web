@@ -1,20 +1,29 @@
-import React from 'react';
-import { promoBanners, mentorPicks, studioBookings, stores } from '../mock';
-import { Phone, MapPin, Video, Mail, Instagram, Facebook, Youtube } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Phone, MapPin, Mail, Instagram, Facebook, Youtube, Sparkles, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { fetchBanners, fetchMentorPicks, fetchStudioBookings, fetchStores } from '../api';
+import { useSite } from '../context/SiteContext';
 
+// ----------- Promo banners (API) -----------
 export function PromoBanners() {
+  const [banners, setBanners] = useState([]);
+  useEffect(() => { fetchBanners('promo').then(setBanners).catch(() => setBanners([])); }, []);
+  if (!banners.length) return null;
   return (
-    <section className="divide-y divide-neutral-200">
-      {promoBanners.map((b, idx) => (
+    <section>
+      {banners.map((b, idx) => (
         <div key={b.id} className={`relative w-full grid grid-cols-1 md:grid-cols-2 ${idx % 2 === 1 ? 'md:[direction:rtl]' : ''}`}>
-          <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[420px] overflow-hidden bg-neutral-100">
+          <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[460px] overflow-hidden bg-[var(--ahps-cream)]">
             <img src={b.image} alt={b.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
           </div>
-          <div className="flex items-center justify-center p-10 md:p-16 bg-[#f7f3ee] [direction:ltr]">
+          <div
+            className="flex items-center justify-center p-10 md:p-16 [direction:ltr]"
+            style={{ background: idx === 0 ? 'var(--ahps-soft)' : idx === 1 ? 'var(--ahps-cream)' : 'var(--ahps-soft)' }}
+          >
             <div className="max-w-md text-center md:text-left">
-              {b.tag && <p className="text-[11px] uppercase tracking-[0.22em] text-neutral-600 mb-3">{b.tag}</p>}
-              <h3 className="font-serif text-3xl md:text-5xl leading-tight mb-6">{b.title}</h3>
-              <a href="#" className="inline-block btn-primary">{b.cta}</a>
+              {b.tag && <span className="section-eyebrow">{b.tag}</span>}
+              <h3 className="font-display text-3xl md:text-5xl leading-tight mb-6">{b.title}</h3>
+              <a href="#" className="btn-primary">{b.cta || 'Shop Now'} <ArrowRight size={16}/></a>
             </div>
           </div>
         </div>
@@ -23,20 +32,26 @@ export function PromoBanners() {
   );
 }
 
+// ----------- Mentor picks (API) -----------
 export function MentorPicks() {
+  const [picks, setPicks] = useState([]);
+  useEffect(() => { fetchMentorPicks().then(setPicks).catch(() => setPicks([])); }, []);
+  if (!picks.length) return null;
   return (
-    <section className="py-14 md:py-20 bg-white">
-      <div className="max-w-screen-2xl mx-auto px-4 lg:px-8">
-        <h2 className="section-title mb-10">SHOP FROM YOUR MENTOR'S COLLECTION</h2>
+    <section className="py-16 md:py-24 bg-white">
+      <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 text-center">
+        <span className="section-eyebrow">Curated by experts</span>
+        <h2 className="section-title mb-12">Shop from your <span className="accent-underline">mentor's</span> picks</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
-          {mentorPicks.map((m) => (
-            <a href="#" key={m.name} className="group block">
-              <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
+          {picks.map((m) => (
+            <a href="#" key={m.id} className="group block">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[var(--ahps-cream)]">
                 <img src={m.image} alt={m.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              </div>
-              <div className="text-center py-5">
-                <h3 className="font-serif text-2xl mb-3 uppercase tracking-wide">{m.name}</h3>
-                <span className="inline-block text-[11px] uppercase tracking-[0.2em] underline underline-offset-4">Shop Now</span>
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/55 to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5 text-white">
+                  <h3 className="font-display text-2xl mb-2">{m.name}</h3>
+                  <span className="inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.18em] font-semibold">Shop Now <ArrowRight size={12}/></span>
+                </div>
               </div>
             </a>
           ))}
@@ -46,16 +61,20 @@ export function MentorPicks() {
   );
 }
 
+// ----------- Studio bookings (API) -----------
 export function StudioBookings() {
+  const [items, setItems] = useState([]);
+  useEffect(() => { fetchStudioBookings().then(setItems).catch(() => setItems([])); }, []);
+  if (!items.length) return null;
   return (
     <section className="grid grid-cols-1 md:grid-cols-3">
-      {studioBookings.map((s) => (
-        <div key={s.id} className="relative aspect-[3/4] md:aspect-[3/4] overflow-hidden">
+      {items.map((s) => (
+        <div key={s.id} className="relative aspect-[3/4] overflow-hidden">
           <img src={s.image} alt={s.heading} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
           <div className="relative h-full flex flex-col items-center justify-end text-center text-white p-8 md:p-12">
-            <p className="text-[12px] uppercase tracking-[0.2em] mb-3">{s.line1}</p>
-            <h3 className="font-serif text-3xl md:text-4xl mb-2">{s.heading}</h3>
+            <p className="text-[11px] uppercase tracking-[0.22em] mb-3 opacity-90">{s.line1}</p>
+            <h3 className="font-display text-3xl md:text-4xl mb-2">{s.heading}</h3>
             <p className="text-sm mb-6 opacity-90">{s.sub}</p>
             <a href={`https://wa.me/${s.whatsapp}`} target="_blank" rel="noreferrer" className="btn-outline">{s.cta}</a>
           </div>
@@ -65,14 +84,17 @@ export function StudioBookings() {
   );
 }
 
-const MARQUEE_TEXT = "India's First Prop Store";
-const MARQUEE_ITEMS = Array.from({ length: 20 }, (_, i) => ({ id: `m-${i}`, text: MARQUEE_TEXT }));
+// ----------- Marquee -----------
+const MARQUEE_ITEMS = Array.from({ length: 20 }, (_, i) => ({ id: `m-${i}` }));
 
-function MarqueeRow({ ariaHidden = false }) {
+function MarqueeRow({ ariaHidden = false, text }) {
   return (
     <div className="flex shrink-0" aria-hidden={ariaHidden || undefined}>
       {MARQUEE_ITEMS.map((m) => (
-        <span key={`${ariaHidden ? 'dup-' : ''}${m.id}`} className="px-6 font-serif text-2xl tracking-wide">{m.text}</span>
+        <span key={`${ariaHidden ? 'dup-' : ''}${m.id}`} className="px-6 font-display text-2xl tracking-tight flex items-center gap-6">
+          {text}
+          <span className="inline-block w-2 h-2 rounded-full" style={{ background: 'var(--ahps-accent)' }} />
+        </span>
       ))}
     </div>
   );
@@ -80,68 +102,100 @@ function MarqueeRow({ ariaHidden = false }) {
 
 export function Marquee() {
   return (
-    <section className="bg-neutral-900 text-white py-6 overflow-hidden">
+    <section className="py-6 overflow-hidden" style={{ background: 'var(--ahps-text)', color: 'var(--ahps-cream)' }}>
       <div className="flex marquee-track">
-        <MarqueeRow />
-        <MarqueeRow ariaHidden />
+        <MarqueeRow text="Bold props for tiny souls." />
+        <MarqueeRow ariaHidden text="Bold props for tiny souls." />
       </div>
     </section>
   );
 }
 
+// ----------- Stores (API) -----------
 export function Stores() {
+  const [items, setItems] = useState([]);
+  useEffect(() => { fetchStores().then(setItems).catch(() => setItems([])); }, []);
+  if (!items.length) return null;
   return (
-    <section className="py-14 md:py-20">
-      <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-10">
-        {stores.map((s) => (
-          <div key={s.name} className="bg-white">
-            <div className="aspect-[16/9] overflow-hidden bg-neutral-100">
-              <img src={s.image} alt={s.name} className="w-full h-full object-cover" loading="lazy" />
-            </div>
-            <div className="pt-6">
-              <h3 className="font-serif text-2xl mb-3">{s.name}</h3>
-              <p className="text-sm text-neutral-700 leading-relaxed mb-3">{s.address}</p>
-              <p className="text-sm"><span className="font-medium">Call us:</span> {s.phone}</p>
-              <p className="text-xs text-neutral-500 mt-1">{s.extra}</p>
-              <p className="text-sm text-neutral-700 mt-3">{s.hours}</p>
-              <div className="flex items-center gap-3 mt-5">
-                <a href={`tel:${s.phone.replace(/[^0-9+]/g, '')}`} className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-neutral-900 hover:text-white flex items-center justify-center transition-colors" aria-label="call"><Phone size={16} /></a>
-                <a href="#" className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-neutral-900 hover:text-white flex items-center justify-center transition-colors" aria-label="video"><Video size={16} /></a>
-                <a href="#" className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-neutral-900 hover:text-white flex items-center justify-center transition-colors" aria-label="map"><MapPin size={16} /></a>
+    <section className="py-16 md:py-24" style={{ background: 'var(--ahps-cream)' }}>
+      <div className="max-w-screen-2xl mx-auto px-4 lg:px-8">
+        <div className="text-center mb-12">
+          <span className="section-eyebrow">Visit Us</span>
+          <h2 className="section-title">Our <span className="accent-underline">studios</span></h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {items.map((s) => (
+            <div key={s.id} className="bg-white rounded-3xl overflow-hidden">
+              <div className="aspect-[16/9] overflow-hidden">
+                <img src={s.image} alt={s.name} className="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <div className="p-7">
+                <h3 className="font-display text-2xl mb-3">{s.name}</h3>
+                <p className="text-sm text-neutral-700 leading-relaxed mb-3">{s.address}</p>
+                <p className="text-sm"><span className="font-semibold">Call us:</span> {s.phone}</p>
+                <p className="text-xs text-neutral-500 mt-1">{s.extra}</p>
+                <p className="text-sm text-neutral-700 mt-3">{s.hours}</p>
+                <div className="flex items-center gap-3 mt-5">
+                  <a href={`tel:${s.phone.replace(/[^0-9+]/g, '')}`} className="w-10 h-10 rounded-full bg-[var(--ahps-soft)] hover:bg-[var(--ahps-primary)] hover:text-white flex items-center justify-center transition-colors" aria-label="call"><Phone size={16}/></a>
+                  <a href="#" className="w-10 h-10 rounded-full bg-[var(--ahps-soft)] hover:bg-[var(--ahps-primary)] hover:text-white flex items-center justify-center transition-colors" aria-label="map"><MapPin size={16}/></a>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-const FOOTER_SHOP_LINKS = [
-  { id: 'fs-1', label: 'Apparels' },
-  { id: 'fs-2', label: 'Props' },
-  { id: 'fs-3', label: 'Studio Backdrops' },
-  { id: 'fs-4', label: 'Themes' },
-  { id: 'fs-5', label: 'Imported Collection' },
-];
+// ----------- CTA: Quiz Banner -----------
+export function QuizCta() {
+  return (
+    <section className="py-14 md:py-20" style={{ background: 'var(--ahps-secondary)', color: '#fff' }}>
+      <div className="max-w-screen-xl mx-auto px-4 lg:px-8 text-center">
+        <span className="inline-flex items-center gap-2 chip mb-5" style={{ background: 'rgba(255,255,255,0.12)', color: '#fff' }}>
+          <Sparkles size={14} /> New · AI Powered
+        </span>
+        <h2 className="font-display text-4xl md:text-6xl font-medium leading-tight mb-5 max-w-3xl mx-auto">
+          Tell us your <span style={{ color: 'var(--ahps-accent)' }}>vibe</span> — we'll style your shoot.
+        </h2>
+        <p className="text-base md:text-lg opacity-85 max-w-2xl mx-auto mb-8">
+          Take our 60-second quiz and get a personalised prop & backdrop bundle curated by AI + our in-house stylists.
+        </p>
+        <Link to="/quiz" className="btn-outline" style={{ borderColor: 'var(--ahps-accent)', color: 'var(--ahps-accent)' }}>
+          <Sparkles size={16} className="mr-2" /> Start Quiz · Free
+        </Link>
+      </div>
+    </section>
+  );
+}
 
-const FOOTER_INFO_LINKS = [
-  { id: 'fi-1', label: 'Meet Our Founder' },
+// ----------- Footer -----------
+const FOOTER_SHOP = [
+  { id: 'fs-1', label: 'New Arrivals' },
+  { id: 'fs-2', label: 'Newborn' },
+  { id: 'fs-3', label: 'Maternity' },
+  { id: 'fs-4', label: 'Backdrops' },
+  { id: 'fs-5', label: 'Themes' },
+];
+const FOOTER_INFO = [
+  { id: 'fi-1', label: 'Our Story' },
   { id: 'fi-2', label: 'Privacy Policy' },
   { id: 'fi-3', label: 'Shipping Policy' },
   { id: 'fi-4', label: 'Refund Policy' },
-  { id: 'fi-5', label: 'Contact Us' },
+  { id: 'fi-5', label: 'Contact' },
 ];
 
 function FooterBrand() {
+  const { config } = useSite();
   return (
     <div className="col-span-2 md:col-span-1">
-      <h3 className="font-serif text-2xl text-white mb-4">Madras Prop Store</h3>
-      <p className="text-sm leading-relaxed">Handcrafted & handpicked photography props at premium finish, affordable pricing. India's first prop store.</p>
+      <h3 className="font-display text-3xl text-white mb-4">{config.brand}</h3>
+      <p className="text-sm leading-relaxed opacity-80">{config.aboutText || 'Handcrafted and handpicked photography props for newborn, baby, kids & maternity. Designed in India, loved by photographers worldwide.'}</p>
       <div className="flex items-center gap-3 mt-5">
-        <a href="https://www.instagram.com/madras_prop_store/" target="_blank" rel="noreferrer" className="hover:text-white" aria-label="instagram"><Instagram size={18} /></a>
-        <a href="#" className="hover:text-white" aria-label="facebook"><Facebook size={18} /></a>
-        <a href="#" className="hover:text-white" aria-label="youtube"><Youtube size={18} /></a>
+        <a href={config.instagram} target="_blank" rel="noreferrer" className="hover:text-white" aria-label="instagram"><Instagram size={18}/></a>
+        <a href="#" className="hover:text-white" aria-label="facebook"><Facebook size={18}/></a>
+        <a href="#" className="hover:text-white" aria-label="youtube"><Youtube size={18}/></a>
       </div>
     </div>
   );
@@ -150,7 +204,7 @@ function FooterBrand() {
 function FooterLinkColumn({ title, links }) {
   return (
     <div>
-      <h4 className="text-white text-sm uppercase tracking-[0.16em] mb-4">{title}</h4>
+      <h4 className="text-white text-sm uppercase tracking-[0.16em] mb-4 font-semibold">{title}</h4>
       <ul className="space-y-2 text-sm">
         {links.map((l) => (
           <li key={l.id}><a href="#" className="hover:text-white">{l.label}</a></li>
@@ -161,38 +215,40 @@ function FooterLinkColumn({ title, links }) {
 }
 
 function FooterNewsletter() {
+  const { config } = useSite();
   const handleSubmit = (e) => {
     e.preventDefault();
     alert('Subscribed!');
   };
   return (
     <div>
-      <h4 className="text-white text-sm uppercase tracking-[0.16em] mb-4">Newsletter</h4>
-      <p className="text-sm mb-3">Subscribe to get updates on new launches & exclusive offers.</p>
-      <form onSubmit={handleSubmit} className="flex">
-        <input type="email" required placeholder="Your email" className="flex-1 bg-transparent border border-neutral-700 px-3 py-2 text-sm outline-none focus:border-white" />
-        <button type="submit" className="bg-white text-neutral-900 px-4 text-xs uppercase tracking-[0.16em]">Join</button>
+      <h4 className="text-white text-sm uppercase tracking-[0.16em] mb-4 font-semibold">Newsletter</h4>
+      <p className="text-sm mb-3 opacity-80">Get first dibs on new launches & exclusive offers.</p>
+      <form onSubmit={handleSubmit} className="flex rounded-full overflow-hidden bg-white/10">
+        <input type="email" required placeholder="your@email.com" className="flex-1 bg-transparent px-4 py-2.5 text-sm outline-none placeholder:text-white/40" />
+        <button type="submit" className="px-5 text-xs uppercase tracking-[0.14em] font-semibold" style={{ background: 'var(--ahps-accent)', color: 'var(--ahps-text)' }}>Join</button>
       </form>
-      <div className="flex items-center gap-2 mt-5 text-xs">
-        <Mail size={14} /> info@madraspropstore.com
+      <div className="flex items-center gap-2 mt-5 text-xs opacity-80">
+        <Mail size={14}/> {config.email}
       </div>
     </div>
   );
 }
 
 export function Footer() {
+  const { config } = useSite();
   return (
-    <footer className="bg-[#1a1a1a] text-neutral-300">
-      <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 py-14 grid grid-cols-2 md:grid-cols-4 gap-10">
+    <footer style={{ background: 'var(--ahps-deep)', color: 'rgba(255,255,255,0.7)' }}>
+      <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 py-16 grid grid-cols-2 md:grid-cols-4 gap-10">
         <FooterBrand />
-        <FooterLinkColumn title="Shop" links={FOOTER_SHOP_LINKS} />
-        <FooterLinkColumn title="Information" links={FOOTER_INFO_LINKS} />
+        <FooterLinkColumn title="Shop" links={FOOTER_SHOP} />
+        <FooterLinkColumn title="Information" links={FOOTER_INFO} />
         <FooterNewsletter />
       </div>
-      <div className="border-t border-neutral-800 py-5">
-        <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-neutral-500">
-          <p>© {new Date().getFullYear()} Madras Prop Store. All rights reserved.</p>
-          <p>Crafted with love in Chennai, India.</p>
+      <div className="border-t border-white/10 py-5">
+        <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs opacity-60">
+          <p>© {new Date().getFullYear()} {config.brand}. All rights reserved.</p>
+          <p>Designed in India  ·  <Link to="/admin" className="underline hover:text-white">Admin</Link></p>
         </div>
       </div>
     </footer>

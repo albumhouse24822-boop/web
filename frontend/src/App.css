@@ -1,28 +1,60 @@
-/* Madras Prop Store clone styles */
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
+/* Album House Prop Store — bold brand styles */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --ahps-primary: #E85A4F;
+  --ahps-secondary: #0F4C5C;
+  --ahps-accent: #F2C94C;
+  --ahps-cream: #FFF8F0;
+  --ahps-text: #2D1B0F;
+  --ahps-soft: #FFE8DC;
+  --ahps-deep: #1B0F0A;
+}
 
 body {
-  font-family: 'Jost', sans-serif;
-  background: #ffffff;
-  color: #1a1a1a;
-  letter-spacing: 0.01em;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--ahps-cream);
+  color: var(--ahps-text);
+  letter-spacing: 0.005em;
 }
 
-.font-serif {
-  font-family: 'Cormorant Garamond', serif;
-  letter-spacing: 0.02em;
+.font-display {
+  font-family: 'Fraunces', 'Cormorant Garamond', serif;
+  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
 }
 
-/* Announcement bar */
+/* ========== Announcement bar ========== */
 .announcement-bar {
-  background: #1a1a1a;
-  color: #fff;
+  background: var(--ahps-deep);
+  color: var(--ahps-cream);
   font-size: 12px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  font-weight: 500;
 }
 
-/* Mega menu hover */
+/* ========== Nav ========== */
+.nav-link {
+  position: relative;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ahps-text);
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -6px;
+  height: 2px;
+  background: var(--ahps-primary);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 250ms cubic-bezier(.2,.7,.3,1);
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
 .nav-item:hover .mega-menu {
   opacity: 1;
   pointer-events: auto;
@@ -32,42 +64,151 @@ body {
   opacity: 0;
   pointer-events: none;
   transform: translateY(8px);
-  transition: opacity 200ms ease, transform 200ms ease;
+  transition: opacity 220ms ease, transform 220ms ease;
 }
 
-/* Product card image swap */
-.product-card .img-primary {
-  transition: opacity 400ms ease, transform 600ms ease;
+/* ========== Buttons ========== */
+.btn-primary {
+  background: var(--ahps-primary);
+  color: #fff;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 14px 28px;
+  border: 2px solid var(--ahps-primary);
+  border-radius: 999px;
+  transition: background-color 250ms ease, color 250ms ease, transform 200ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
-.product-card:hover .img-primary {
-  opacity: 0;
+.btn-primary:hover {
+  background: var(--ahps-deep);
+  border-color: var(--ahps-deep);
+  transform: translateY(-1px);
 }
-.product-card .img-hover {
-  opacity: 0;
-  transition: opacity 400ms ease;
+.btn-outline {
+  background: transparent;
+  color: #fff;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 14px 28px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  transition: background-color 250ms ease, color 250ms ease;
 }
-.product-card:hover .img-hover {
-  opacity: 1;
+.btn-outline:hover {
+  background: #fff;
+  color: var(--ahps-text);
 }
-.product-card:hover .quick-view-btn {
-  opacity: 1;
-  transform: translateY(0);
+.btn-secondary {
+  background: var(--ahps-secondary);
+  color: #fff;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 14px 28px;
+  border: 2px solid var(--ahps-secondary);
+  border-radius: 999px;
+  transition: background-color 250ms ease, transform 200ms ease;
 }
+.btn-secondary:hover {
+  background: var(--ahps-deep);
+  border-color: var(--ahps-deep);
+  transform: translateY(-1px);
+}
+
+/* ========== Section titles ========== */
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: clamp(30px, 4.5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ahps-text);
+}
+.section-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ahps-primary);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* ========== Product card with 3D tilt ========== */
+.product-card {
+  position: relative;
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 350ms cubic-bezier(.2,.7,.3,1), box-shadow 350ms ease;
+  will-change: transform;
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -24px rgba(232,90,79,0.35), 0 4px 16px -8px rgba(0,0,0,0.1);
+}
+.product-card .img-primary { transition: opacity 400ms ease, transform 700ms ease; }
+.product-card:hover .img-primary { opacity: 0; transform: scale(1.04); }
+.product-card .img-hover { opacity: 0; transition: opacity 400ms ease; }
+.product-card:hover .img-hover { opacity: 1; }
+.product-card .img-only:hover { transform: scale(1.06); }
 .product-card .quick-view-btn {
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 250ms ease, transform 250ms ease;
 }
-
-/* Theme card overlay */
-.theme-card:hover img {
-  transform: scale(1.06);
-}
-.theme-card img {
-  transition: transform 700ms ease;
+.product-card:hover .quick-view-btn {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* Marquee */
+/* ========== Theme cards (with corner peel & color burst) ========== */
+.theme-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  transition: transform 400ms cubic-bezier(.2,.7,.3,1);
+}
+.theme-card:hover { transform: translateY(-4px) rotate(-0.3deg); }
+.theme-card img { transition: transform 700ms ease; }
+.theme-card:hover img { transform: scale(1.08); }
+.theme-card .badge-corner {
+  position: absolute;
+  top: 14px;
+  right: -2px;
+  background: var(--ahps-accent);
+  color: var(--ahps-text);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  font-weight: 700;
+  border-radius: 0 0 0 8px;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+.theme-card:hover .badge-corner { opacity: 1; transform: translateX(0); }
+
+/* ========== Hero ========== */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+.hero-slide.active { opacity: 1; }
+
+/* ========== Marquee ========== */
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -78,88 +219,159 @@ body {
   will-change: transform;
 }
 
-/* Hero slideshow */
-.hero-slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 800ms ease;
+/* ========== Sale badges ========== */
+.badge {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-weight: 700;
 }
-.hero-slide.active { opacity: 1; }
+.badge-soldout { background: var(--ahps-deep); color: #fff; }
+.badge-sale { background: var(--ahps-primary); color: #fff; }
+.badge-new { background: var(--ahps-accent); color: var(--ahps-text); }
+.badge-ready { background: var(--ahps-secondary); color: #fff; }
 
-/* Hide scrollbar */
+/* ========== Scroll utilities ========== */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Button primary - light tone, not dark gradient */
-.btn-primary {
-  background: #1a1a1a;
+/* ========== AI Quiz floating button ========== */
+.floating-ai {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 40;
+  background: linear-gradient(135deg, var(--ahps-primary) 0%, #f47666 100%);
   color: #fff;
-  letter-spacing: 0.14em;
+  border-radius: 999px;
+  padding: 14px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 14px 28px;
-  border: 1px solid #1a1a1a;
-  transition: background-color 250ms ease, color 250ms ease;
+  box-shadow: 0 14px 36px -12px rgba(232,90,79,0.55);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 250ms ease, box-shadow 250ms ease;
 }
-.btn-primary:hover {
-  background: #fff;
-  color: #1a1a1a;
+.floating-ai:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 22px 44px -16px rgba(232,90,79,0.7);
 }
-.btn-outline {
-  background: transparent;
-  color: #fff;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 14px 28px;
-  border: 1px solid #fff;
-  transition: background-color 250ms ease, color 250ms ease;
+.floating-ai .ai-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--ahps-accent);
+  border-radius: 999px;
+  animation: ai-pulse 1.6s ease-in-out infinite;
 }
-.btn-outline:hover {
-  background: #fff;
-  color: #1a1a1a;
+@keyframes ai-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
 }
 
-/* Section titles */
-.section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 500;
-  font-size: clamp(28px, 4vw, 44px);
-  text-align: center;
-  letter-spacing: 0.02em;
+/* ========== Reveal on view ========== */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms ease, transform 700ms cubic-bezier(.2,.7,.3,1);
 }
+.reveal.in { opacity: 1; transform: translateY(0); }
 
-/* Sold-out / sale badges */
-.badge {
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 4px 8px;
-}
-
-/* Nav underline */
-.nav-link {
-  position: relative;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-.nav-link::after {
-  content: '';
+/* ========== Blob shapes (background flair) ========== */
+.blob {
   position: absolute;
-  left: 0; right: 0; bottom: -6px;
-  height: 1px;
-  background: #1a1a1a;
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 250ms ease;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.45;
+  pointer-events: none;
 }
-.nav-link:hover::after { transform: scaleX(1); }
 
-/* Drawer slide-in */
-.drawer-enter { transform: translateX(100%); }
-.drawer-enter-active { transform: translateX(0); transition: transform 300ms ease; }
+/* ========== Soft pill chips ========== */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ahps-soft);
+  color: var(--ahps-text);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ========== Admin panel ========== */
+.admin-shell {
+  min-height: 100vh;
+  background: #f5f4f1;
+  color: var(--ahps-text);
+  font-family: 'Inter', sans-serif;
+}
+.admin-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #ece7df;
+}
+.admin-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d6d2c8;
+  background: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.admin-input:focus {
+  border-color: var(--ahps-primary);
+  box-shadow: 0 0 0 3px rgba(232,90,79,0.15);
+}
+.admin-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #6b6357;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* ========== Quiz UI ========== */
+.quiz-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: 2px solid #ece7df;
+  border-radius: 14px;
+  padding: 16px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 200ms ease;
+  cursor: pointer;
+}
+.quiz-option:hover {
+  border-color: var(--ahps-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -16px rgba(232,90,79,0.4);
+}
+.quiz-option.selected {
+  border-color: var(--ahps-primary);
+  background: var(--ahps-soft);
+  color: var(--ahps-text);
+}
+
+/* ========== Bold underline accent ========== */
+.accent-underline {
+  background-image: linear-gradient(120deg, var(--ahps-accent) 0%, var(--ahps-accent) 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 35%;
+  background-position: 0 85%;
+  padding: 0 4px;
+}
