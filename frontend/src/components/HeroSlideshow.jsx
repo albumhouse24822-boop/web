@@ -54,7 +54,7 @@ export default function HeroSlideshow() {
             <div className="max-w-2xl">
               <span className="chip mb-5">
                 <span className="w-1.5 h-1.5 rounded-full" style={{ background: config.primaryColor }} />
-                India's Boldest Prop Store
+                India&apos;s Boldest Prop Store
               </span>
               <h1 className="font-display text-[40px] md:text-6xl lg:text-7xl font-medium leading-[1.02] tracking-tight" style={{ color: 'var(--ahps-text)' }}>
                 Tiny moments,

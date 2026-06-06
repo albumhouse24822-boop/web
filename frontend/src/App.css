@@ -123,6 +123,17 @@ body {
   transform: translateY(-1px);
 }
 
+/* ========== Image protection ========== */
+img {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+.product-card, .theme-card, .hero-slide {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 /* ========== Section titles ========== */
 .section-title {
   font-family: 'Fraunces', serif;

@@ -30,6 +30,7 @@ export const fetchReviews = () => api.get('/reviews').then(r => r.data);
 export const fetchStores = () => api.get('/stores').then(r => r.data);
 export const fetchMentorPicks = () => api.get('/mentor-picks').then(r => r.data);
 export const fetchStudioBookings = () => api.get('/studio-bookings').then(r => r.data);
+export const fetchNavigation = () => api.get('/navigation').then(r => r.data);
 export const submitQuiz = (payload) => api.post('/quiz/recommend', payload).then(r => r.data);
 
 // Admin
@@ -47,6 +48,26 @@ export const adminDeleteTheme = (id) => api.delete(`/admin/themes/${id}`).then(r
 export const adminCreateBanner = (b) => api.post('/admin/banners', b).then(r => r.data);
 export const adminUpdateBanner = (id, b) => api.put(`/admin/banners/${id}`, b).then(r => r.data);
 export const adminDeleteBanner = (id) => api.delete(`/admin/banners/${id}`).then(r => r.data);
+
+export const adminCreateReview = (r) => api.post('/admin/reviews', r).then(x => x.data);
+export const adminUpdateReview = (id, r) => api.put(`/admin/reviews/${id}`, r).then(x => x.data);
+export const adminDeleteReview = (id) => api.delete(`/admin/reviews/${id}`).then(x => x.data);
+
+export const adminCreateMentorPick = (m) => api.post('/admin/mentor-picks', m).then(r => r.data);
+export const adminUpdateMentorPick = (id, m) => api.put(`/admin/mentor-picks/${id}`, m).then(r => r.data);
+export const adminDeleteMentorPick = (id) => api.delete(`/admin/mentor-picks/${id}`).then(r => r.data);
+
+export const adminCreateStudioBooking = (s) => api.post('/admin/studio-bookings', s).then(r => r.data);
+export const adminUpdateStudioBooking = (id, s) => api.put(`/admin/studio-bookings/${id}`, s).then(r => r.data);
+export const adminDeleteStudioBooking = (id) => api.delete(`/admin/studio-bookings/${id}`).then(r => r.data);
+
+export const adminCreateStore = (s) => api.post('/admin/stores', s).then(r => r.data);
+export const adminUpdateStore = (id, s) => api.put(`/admin/stores/${id}`, s).then(r => r.data);
+export const adminDeleteStore = (id) => api.delete(`/admin/stores/${id}`).then(r => r.data);
+
+export const adminCreateNav = (n) => api.post('/admin/navigation', n).then(r => r.data);
+export const adminUpdateNav = (id, n) => api.put(`/admin/navigation/${id}`, n).then(r => r.data);
+export const adminDeleteNav = (id) => api.delete(`/admin/navigation/${id}`).then(r => r.data);
 
 export const formatPrice = (n) =>
   `\u20B9 ${Number(n).toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;

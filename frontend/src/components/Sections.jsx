@@ -50,7 +50,7 @@ export function MentorPicks() {
     <section className="py-16 md:py-24 bg-white">
       <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 text-center">
         <span className="section-eyebrow">Curated by experts</span>
-        <h2 className="section-title mb-12">Shop from your <span className="accent-underline">mentor's</span> picks</h2>
+        <h2 className="section-title mb-12">Shop from your <span className="accent-underline">mentor&apos;s</span> picks</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
           {picks.map((m) => (
             <Link to="/shop" key={m.id} className="group block">
@@ -166,7 +166,7 @@ export function QuizCta() {
           <Sparkles size={14} /> New · AI Powered
         </span>
         <h2 className="font-display text-4xl md:text-6xl font-medium leading-tight mb-5 max-w-3xl mx-auto">
-          Tell us your <span style={{ color: 'var(--ahps-accent)' }}>vibe</span> — we'll style your shoot.
+          Tell us your <span style={{ color: 'var(--ahps-accent)' }}>vibe</span> — we&apos;ll style your shoot.
         </h2>
         <p className="text-base md:text-lg opacity-85 max-w-2xl mx-auto mb-8">
           Take our 60-second quiz and get a personalised prop & backdrop bundle curated by AI + our in-house stylists.

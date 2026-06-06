@@ -17,7 +17,7 @@ import bcrypt
 import jwt as pyjwt
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 
-from seed import SEED_PRODUCTS, SEED_THEMES, SEED_BANNERS, SEED_REVIEWS, SEED_STORES, SEED_SITE_CONFIG, SEED_MENTORS, SEED_STUDIO_BOOKINGS
+from seed import SEED_PRODUCTS, SEED_THEMES, SEED_BANNERS, SEED_REVIEWS, SEED_STORES, SEED_SITE_CONFIG, SEED_MENTORS, SEED_STUDIO_BOOKINGS, SEED_NAVIGATION
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -177,6 +177,13 @@ class MentorPick(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     image: str
+    href: str = "/shop"
+    order: int = 0
+
+class MentorPickIn(BaseModel):
+    name: str
+    image: str
+    href: str = "/shop"
     order: int = 0
 
 class StudioBooking(BaseModel):
@@ -188,6 +195,38 @@ class StudioBooking(BaseModel):
     image: str
     whatsapp: str
     order: int = 0
+
+class StudioBookingIn(BaseModel):
+    line1: str
+    heading: str
+    sub: str
+    cta: str
+    image: str
+    whatsapp: str
+    order: int = 0
+
+class NavItem(BaseModel):
+    label: str
+    href: str
+
+class NavColumn(BaseModel):
+    title: str
+    items: List[NavItem] = []
+
+class NavCategory(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    label: str
+    href: str = "/shop"
+    highlight: bool = False
+    order: int = 0
+    columns: List[NavColumn] = []
+
+class NavCategoryIn(BaseModel):
+    label: str
+    href: str = "/shop"
+    highlight: bool = False
+    order: int = 0
+    columns: List[NavColumn] = []
 
 
 # ===================== Auth =====================
@@ -297,6 +336,11 @@ async def list_studio_bookings():
     docs = await db.studio_bookings.find().sort("order", 1).to_list(50)
     return [StudioBooking(**strip_id(d)) for d in docs]
 
+@api.get("/navigation", response_model=List[NavCategory])
+async def list_navigation():
+    docs = await db.navigation.find().sort("order", 1).to_list(50)
+    return [NavCategory(**strip_id(d)) for d in docs]
+
 
 # ===================== Admin auth =====================
 
@@ -391,11 +435,107 @@ async def create_review(r: ReviewIn, _: str = Depends(require_admin)):
     await db.reviews.insert_one(obj.dict())
     return obj
 
+@api.put("/admin/reviews/{rid}", response_model=Review)
+async def update_review(rid: str, r: ReviewIn, _: str = Depends(require_admin)):
+    res = await db.reviews.update_one({"id": rid}, {"$set": r.dict()})
+    if res.matched_count == 0:
+        raise HTTPException(404, "Review not found")
+    doc = await db.reviews.find_one({"id": rid})
+    return Review(**strip_id(doc))
+
 @api.delete("/admin/reviews/{rid}")
 async def delete_review(rid: str, _: str = Depends(require_admin)):
     res = await db.reviews.delete_one({"id": rid})
     if res.deleted_count == 0:
         raise HTTPException(404, "Review not found")
+    return {"ok": True}
+
+# Mentor picks CRUD
+@api.post("/admin/mentor-picks", response_model=MentorPick)
+async def create_mentor_pick(m: MentorPickIn, _: str = Depends(require_admin)):
+    obj = MentorPick(**m.dict())
+    await db.mentor_picks.insert_one(obj.dict())
+    return obj
+
+@api.put("/admin/mentor-picks/{mid}", response_model=MentorPick)
+async def update_mentor_pick(mid: str, m: MentorPickIn, _: str = Depends(require_admin)):
+    res = await db.mentor_picks.update_one({"id": mid}, {"$set": m.dict()})
+    if res.matched_count == 0:
+        raise HTTPException(404, "Mentor pick not found")
+    doc = await db.mentor_picks.find_one({"id": mid})
+    return MentorPick(**strip_id(doc))
+
+@api.delete("/admin/mentor-picks/{mid}")
+async def delete_mentor_pick(mid: str, _: str = Depends(require_admin)):
+    res = await db.mentor_picks.delete_one({"id": mid})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Mentor pick not found")
+    return {"ok": True}
+
+# Studio bookings CRUD
+@api.post("/admin/studio-bookings", response_model=StudioBooking)
+async def create_studio_booking(s: StudioBookingIn, _: str = Depends(require_admin)):
+    obj = StudioBooking(**s.dict())
+    await db.studio_bookings.insert_one(obj.dict())
+    return obj
+
+@api.put("/admin/studio-bookings/{sid}", response_model=StudioBooking)
+async def update_studio_booking(sid: str, s: StudioBookingIn, _: str = Depends(require_admin)):
+    res = await db.studio_bookings.update_one({"id": sid}, {"$set": s.dict()})
+    if res.matched_count == 0:
+        raise HTTPException(404, "Studio booking not found")
+    doc = await db.studio_bookings.find_one({"id": sid})
+    return StudioBooking(**strip_id(doc))
+
+@api.delete("/admin/studio-bookings/{sid}")
+async def delete_studio_booking(sid: str, _: str = Depends(require_admin)):
+    res = await db.studio_bookings.delete_one({"id": sid})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Studio booking not found")
+    return {"ok": True}
+
+# Stores CRUD
+@api.post("/admin/stores", response_model=Store)
+async def create_store(s: StoreIn, _: str = Depends(require_admin)):
+    obj = Store(**s.dict())
+    await db.stores.insert_one(obj.dict())
+    return obj
+
+@api.put("/admin/stores/{sid}", response_model=Store)
+async def update_store(sid: str, s: StoreIn, _: str = Depends(require_admin)):
+    res = await db.stores.update_one({"id": sid}, {"$set": s.dict()})
+    if res.matched_count == 0:
+        raise HTTPException(404, "Store not found")
+    doc = await db.stores.find_one({"id": sid})
+    return Store(**strip_id(doc))
+
+@api.delete("/admin/stores/{sid}")
+async def delete_store(sid: str, _: str = Depends(require_admin)):
+    res = await db.stores.delete_one({"id": sid})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Store not found")
+    return {"ok": True}
+
+# Navigation CRUD
+@api.post("/admin/navigation", response_model=NavCategory)
+async def create_nav(n: NavCategoryIn, _: str = Depends(require_admin)):
+    obj = NavCategory(**n.dict())
+    await db.navigation.insert_one(obj.dict())
+    return obj
+
+@api.put("/admin/navigation/{nid}", response_model=NavCategory)
+async def update_nav(nid: str, n: NavCategoryIn, _: str = Depends(require_admin)):
+    res = await db.navigation.update_one({"id": nid}, {"$set": n.dict()})
+    if res.matched_count == 0:
+        raise HTTPException(404, "Nav category not found")
+    doc = await db.navigation.find_one({"id": nid})
+    return NavCategory(**strip_id(doc))
+
+@api.delete("/admin/navigation/{nid}")
+async def delete_nav(nid: str, _: str = Depends(require_admin)):
+    res = await db.navigation.delete_one({"id": nid})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Nav category not found")
     return {"ok": True}
 
 
@@ -534,6 +674,7 @@ async def seed_database():
         ("stores", SEED_STORES),
         ("mentor_picks", SEED_MENTORS),
         ("studio_bookings", SEED_STUDIO_BOOKINGS),
+        ("navigation", SEED_NAVIGATION),
     ]
     for coll, data in seeds:
         count = await db[coll].count_documents({})

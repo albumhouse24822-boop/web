@@ -189,6 +189,78 @@ backend:
         agent: "testing"
         comment: "CORS middleware configured correctly with allow_origins=['*'], allow_methods=['*'], allow_headers=['*']. All API requests from external testing client (backend_test.py) successful. No CORS errors encountered during testing."
 
+  - task: "Navigation Public Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "NEW endpoint GET /api/navigation working correctly. Returns 7 seeded navigation categories as expected. Each item has correct structure with fields: id, label, href, highlight (bool), order, columns (list of {title, items: [{label, href}]}). Response structure verified."
+
+  - task: "Navigation Admin CRUD"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "NEW admin CRUD for navigation fully functional. POST /api/admin/navigation creates navigation with UUID. PUT /api/admin/navigation/{id} updates navigation successfully. DELETE /api/admin/navigation/{id} removes navigation. All operations verified by listing endpoint. Without admin token, all endpoints correctly return 401. Full CRUD cycle tested: create → update (label changed from 'Sale' to 'Big Sale') → verify → delete."
+
+  - task: "Stores Admin CRUD"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "NEW admin CRUD for stores fully functional. POST /api/admin/stores creates store with UUID. PUT /api/admin/stores/{id} updates store successfully. DELETE /api/admin/stores/{id} removes store. All operations verified by listing endpoint. Without admin token, all endpoints correctly return 401. Full CRUD cycle tested: create → update (name changed from 'Test Store' to 'Updated Test Store') → verify → delete."
+
+  - task: "Mentor Picks PUT Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "NEW PUT endpoint for mentor picks working correctly. PUT /api/admin/mentor-picks/{id} updates mentor pick successfully. Previously only POST and DELETE existed. Full CRUD cycle tested: create → update (name changed from 'Test Mentor' to 'Updated Test Mentor') → verify → delete. Update verified in listing endpoint."
+
+  - task: "Studio Bookings PUT Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "NEW PUT endpoint for studio bookings working correctly. PUT /api/admin/studio-bookings/{id} updates studio booking successfully. Previously only POST and DELETE existed. Full CRUD cycle tested: create → update (heading changed from 'Call test' to 'Updated Call test') → verify → delete. Update verified in listing endpoint."
+
+  - task: "Reviews PUT Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "NEW PUT endpoint for reviews working correctly. PUT /api/admin/reviews/{id} updates review successfully. Previously only POST and DELETE existed. Tested by updating existing review title to 'UPDATED TEST TITLE', verifying in list, then restoring original. Also tested full CRUD cycle: create → delete. Update verified in listing endpoint."
+
 frontend:
   - task: "Frontend Testing"
     implemented: false
@@ -205,7 +277,7 @@ frontend:
 metadata:
   created_by: "testing_agent"
   version: "1.0"
-  test_sequence: 1
+  test_sequence: 2
   run_ui: false
 
 test_plan:
@@ -217,3 +289,5 @@ test_plan:
 agent_communication:
   - agent: "testing"
     message: "Backend API testing completed successfully. All 25 tests passed (13 public endpoints, 4 admin auth tests, 6 admin CRUD tests, 2 AI quiz tests). No critical or major issues found. All endpoints returning correct status codes and data structures. Admin authentication with JWT working correctly. CRUD operations functional. AI quiz integration with LLM working with proper fallback. Database seeding and MongoDB integration working as expected. Backend is production-ready."
+  - agent: "testing"
+    message: "NEW ENDPOINTS TESTING COMPLETED - All 54 backend tests passed (14 public endpoints, 4 admin auth tests, 30 admin CRUD tests including new endpoints, 2 AI quiz tests, 4 regression tests). NEW FEATURES TESTED: (1) GET /api/navigation returns 7 seeded items with correct structure ✓ (2) Navigation admin CRUD (POST/PUT/DELETE) fully functional ✓ (3) Stores admin CRUD (POST/PUT/DELETE) fully functional ✓ (4) NEW PUT endpoints for mentor-picks, studio-bookings, and reviews all working ✓ (5) All admin endpoints correctly return 401 without token ✓ REGRESSION TESTS: site-config, products (23 items), admin login, quiz recommend all still working ✓ No critical or major issues found. Backend is production-ready."

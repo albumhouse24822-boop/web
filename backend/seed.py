@@ -112,3 +112,86 @@ SEED_STUDIO_BOOKINGS = [
     {"id": _id(), "line1": "Rent our premium props at Chennai", "heading": "Call 73057 55580", "sub": "at the most affordable pricing", "cta": "Book Now", "image": "https://madraspropstore.com/cdn/shop/files/rental-props_9d121337-331e-4e03-8184-91d5509ab56a.jpg?v=1732365817&width=3226", "whatsapp": "917305755580", "order": 2},
     {"id": _id(), "line1": "Studio in Hyderabad", "heading": "Call 89787 05580", "sub": "premium studios, affordable pricing", "cta": "Book Now", "image": "https://madraspropstore.com/cdn/shop/files/Midway.jpg?v=1732366781&width=1782", "whatsapp": "918978705580", "order": 3},
 ]
+
+SEED_NAVIGATION = [
+    {"id": _id(), "label": "New Arrivals", "href": "/shop?category=new-arrivals", "highlight": False, "order": 1,
+     "columns": [{"title": "Just In", "items": [
+        {"label": "All New Arrivals", "href": "/shop?category=new-arrivals"},
+        {"label": "Backdrops", "href": "/shop?q=Backdrop"},
+        {"label": "Wraps & Pillows", "href": "/shop?q=Wrap"},
+        {"label": "Posing Props", "href": "/shop?q=Posing"},
+        {"label": "Filler Props", "href": "/shop?q=Filler"},
+        {"label": "Mini Sets", "href": "/shop?q=Setup"},
+     ]}]},
+    {"id": _id(), "label": "Newborn", "href": "/shop?category=baby", "highlight": False, "order": 2,
+     "columns": [
+        {"title": "Apparel", "items": [
+            {"label": "Wraps", "href": "/shop?q=Wrap"},
+            {"label": "Pillows", "href": "/shop?q=Pillow"},
+            {"label": "Knit & Felted", "href": "/shop?q=Felted"},
+        ]},
+        {"title": "Posing", "items": [
+            {"label": "Posing Aids", "href": "/shop?q=Posing"},
+            {"label": "Podiums", "href": "/shop?q=Podium"},
+            {"label": "Sofa Props", "href": "/shop?q=Sofa"},
+        ]},
+        {"title": "Accessories", "items": [
+            {"label": "Headsets & Toys", "href": "/shop?q=Headset"},
+            {"label": "Filler Props", "href": "/shop?q=Filler"},
+            {"label": "Hand Props", "href": "/shop?q=Combo"},
+        ]},
+     ]},
+    {"id": _id(), "label": "Maternity", "href": "/shop?q=Maternity", "highlight": False, "order": 3,
+     "columns": [{"title": "Backdrops", "items": [
+        {"label": "All Maternity", "href": "/shop?q=Maternity"},
+        {"label": "Floral", "href": "/shop?q=Floral"},
+        {"label": "Tropical", "href": "/shop?q=Tropical"},
+        {"label": "Garden", "href": "/shop?q=Garden"},
+        {"label": "Fairy Light Path", "href": "/shop?q=Fairy"},
+     ]}]},
+    {"id": _id(), "label": "Backdrops", "href": "/shop?q=Backdrop", "highlight": False, "order": 4,
+     "columns": [
+        {"title": "Baby", "items": [
+            {"label": "All Baby Backdrops", "href": "/shop?q=Backdrop"},
+            {"label": "Floral", "href": "/shop?q=Floral"},
+            {"label": "Royal Lotus", "href": "/shop?q=Lotus"},
+            {"label": "Sandy Shores", "href": "/shop?q=Sandy"},
+            {"label": "Adventure", "href": "/shop?q=Adventure"},
+        ]},
+        {"title": "Maternity", "items": [
+            {"label": "All Maternity", "href": "/shop?q=Maternity"},
+            {"label": "Rose Corridor", "href": "/shop?q=Rose"},
+            {"label": "Neutral Arch", "href": "/shop?q=Neutral"},
+        ]},
+        {"title": "Curated", "items": [
+            {"label": "Ready-made themes", "href": "/shop?category=ready-themes"},
+            {"label": "Theme Bundles", "href": "/shop?q=Setup"},
+        ]},
+     ]},
+    {"id": _id(), "label": "Themes", "href": "/shop", "highlight": False, "order": 5,
+     "columns": [
+        {"title": "Popular", "items": [
+            {"label": "Jungle", "href": "/shop?q=Jungle"},
+            {"label": "Beach", "href": "/shop?q=Beach"},
+            {"label": "Royal", "href": "/shop?q=Royal"},
+            {"label": "Birthday", "href": "/shop?q=Birthday"},
+        ]},
+        {"title": "Storybook", "items": [
+            {"label": "Adventure", "href": "/shop?q=Adventure"},
+            {"label": "Carnival", "href": "/shop?q=Carnival"},
+            {"label": "Explorer", "href": "/shop?q=Explorer"},
+        ]},
+        {"title": "Special", "items": [
+            {"label": "Cake Smash", "href": "/shop?q=Cake"},
+            {"label": "Vintage", "href": "/shop?q=Vintage"},
+            {"label": "Galaxy", "href": "/shop?q=Galaxy"},
+        ]},
+     ]},
+    {"id": _id(), "label": "AI Stylist", "href": "/quiz", "highlight": True, "order": 6, "columns": []},
+    {"id": _id(), "label": "About", "href": "/shop", "highlight": False, "order": 7,
+     "columns": [{"title": "Info", "items": [
+        {"label": "Our Story", "href": "/shop"},
+        {"label": "Studios", "href": "/#stores"},
+        {"label": "Contact", "href": "/shop"},
+     ]}]},
+]

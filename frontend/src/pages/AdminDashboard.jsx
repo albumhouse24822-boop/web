@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { adminMe, auth, fetchSiteConfig, adminUpdateSiteConfig, fetchProducts, adminCreateProduct, adminUpdateProduct, adminDeleteProduct, fetchThemes, adminCreateTheme, adminUpdateTheme, adminDeleteTheme, fetchBanners, adminCreateBanner, adminUpdateBanner, adminDeleteBanner } from '../api';
-import { LogOut, Save, Plus, Trash2, Edit3, ExternalLink, Image as ImageIcon, Palette } from 'lucide-react';
+import {
+  adminMe, auth,
+  fetchSiteConfig, adminUpdateSiteConfig,
+  fetchProducts, adminCreateProduct, adminUpdateProduct, adminDeleteProduct,
+  fetchThemes, adminCreateTheme, adminUpdateTheme, adminDeleteTheme,
+  fetchBanners, adminCreateBanner, adminUpdateBanner, adminDeleteBanner,
+  fetchReviews, adminCreateReview, adminUpdateReview, adminDeleteReview,
+  fetchMentorPicks, adminCreateMentorPick, adminUpdateMentorPick, adminDeleteMentorPick,
+  fetchStudioBookings, adminCreateStudioBooking, adminUpdateStudioBooking, adminDeleteStudioBooking,
+  fetchStores, adminCreateStore, adminUpdateStore, adminDeleteStore,
+} from '../api';
+import { LogOut, Save, Plus, Trash2, Edit3, ExternalLink, Palette } from 'lucide-react';
+import CrudGrid from '../components/admin/CrudGrid';
+import NavigationTab from '../components/admin/NavigationTab';
 
-const TABS = ['Site & Brand', 'Products', 'Themes', 'Banners'];
+const TABS = ['Brand & Colors', 'Navigation', 'Products', 'Themes', 'Banners', 'Mentor Picks', 'Studios', 'Stores', 'Reviews'];
 
+// ------------- Brand & Colors -------------
 function SiteAndBrandTab() {
   const [cfg, setCfg] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -23,17 +36,10 @@ function SiteAndBrandTab() {
   const removeAnnouncement = (idx) => setCfg({ ...cfg, announcements: cfg.announcements.filter((_, i) => i !== idx) });
 
   const save = async () => {
-    setSaving(true);
-    setMsg('');
-    try {
-      await adminUpdateSiteConfig(cfg);
-      setMsg('Saved!');
-      setTimeout(() => setMsg(''), 2500);
-    } catch (e) {
-      setMsg('Failed to save.');
-    } finally {
-      setSaving(false);
-    }
+    setSaving(true); setMsg('');
+    try { await adminUpdateSiteConfig(cfg); setMsg('Saved!'); setTimeout(() => setMsg(''), 2500); }
+    catch { setMsg('Failed to save.'); }
+    finally { setSaving(false); }
   };
 
   const colorFields = [
@@ -94,259 +100,252 @@ function SiteAndBrandTab() {
   );
 }
 
-function EmptyForm() {
-  return null;
-}
-
+// ------------- Products tab -------------
 function ProductsTab() {
-  const [items, setItems] = useState([]);
-  const [editing, setEditing] = useState(null);
-  const [saving, setSaving] = useState(false);
-
-  const load = async () => setItems(await fetchProducts());
-  useEffect(() => { load(); }, []);
-
+  const productFields = [
+    { k: 'name', label: 'Name', full: true },
+    { k: 'tag', label: 'Tag (Made to Order / Ready to Ship / Sold Out)' },
+    { k: 'category', label: 'Category', type: 'select', options: [
+      { v: 'new-arrivals', label: 'New Arrivals' },
+      { v: 'ready-themes', label: 'Ready-made themes' },
+      { v: 'baby', label: 'Baby' },
+      { v: 'maternity', label: 'Maternity' },
+    ]},
+    { k: 'price', label: 'Price (₹)', type: 'number' },
+    { k: 'regularPrice', label: 'Regular Price (₹) — optional', type: 'number' },
+    { k: 'save', label: 'Save % (optional, e.g. 30%)' },
+    { k: 'sale', label: 'Mark as on Sale', type: 'checkbox', checkboxLabel: 'On sale' },
+    { k: 'image', label: 'Image URL', full: true },
+    { k: 'hover', label: 'Hover image URL (optional)', full: true },
+    { k: 'description', label: 'Description', type: 'textarea', full: true },
+    { k: 'order', label: 'Display order', type: 'number' },
+  ];
   const blank = { name: '', tag: 'Made to Order', sale: false, price: 0, regularPrice: null, save: '', image: '', hover: '', category: 'new-arrivals', description: '', order: 0 };
-
-  const save = async () => {
-    setSaving(true);
-    try {
-      const payload = { ...editing };
-      if (payload.regularPrice === '' || payload.regularPrice === null) payload.regularPrice = null;
-      else payload.regularPrice = Number(payload.regularPrice);
-      payload.price = Number(payload.price);
-      payload.order = Number(payload.order || 0);
-      if (editing.id) await adminUpdateProduct(editing.id, payload);
-      else await adminCreateProduct(payload);
-      setEditing(null);
-      await load();
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const del = async (id) => {
-    if (!window.confirm('Delete this product?')) return;
-    await adminDeleteProduct(id);
-    await load();
-  };
-
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-neutral-500">{items.length} products</p>
-        <button onClick={() => setEditing(blank)} className="btn-primary"><Plus size={16}/> New product</button>
-      </div>
-
-      {editing && (
-        <div className="admin-card">
-          <h3 className="font-display text-xl mb-4">{editing.id ? 'Edit' : 'New'} product</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="md:col-span-2"><label className="admin-label">Name</label><input className="admin-input" value={editing.name} onChange={(e) => setEditing({...editing, name: e.target.value})} /></div>
-            <div><label className="admin-label">Tag (Made to Order / Ready to Ship / Sold Out)</label><input className="admin-input" value={editing.tag || ''} onChange={(e) => setEditing({...editing, tag: e.target.value})} /></div>
-            <div><label className="admin-label">Category</label>
-              <select className="admin-input" value={editing.category} onChange={(e) => setEditing({...editing, category: e.target.value})}>
-                <option value="new-arrivals">New Arrivals</option>
-                <option value="ready-themes">Ready-made themes</option>
-                <option value="baby">Baby</option>
-                <option value="maternity">Maternity</option>
-              </select>
-            </div>
-            <div><label className="admin-label">Price (₹)</label><input type="number" className="admin-input" value={editing.price} onChange={(e) => setEditing({...editing, price: e.target.value})} /></div>
-            <div><label className="admin-label">Regular Price (₹) — optional</label><input type="number" className="admin-input" value={editing.regularPrice || ''} onChange={(e) => setEditing({...editing, regularPrice: e.target.value})} /></div>
-            <div><label className="admin-label">Save % (optional)</label><input className="admin-input" value={editing.save || ''} onChange={(e) => setEditing({...editing, save: e.target.value})} /></div>
-            <div>
-              <label className="admin-label inline-flex items-center gap-2"><input type="checkbox" checked={!!editing.sale} onChange={(e) => setEditing({...editing, sale: e.target.checked})} /> On Sale</label>
-            </div>
-            <div className="md:col-span-2"><label className="admin-label">Image URL</label><input className="admin-input" value={editing.image} onChange={(e) => setEditing({...editing, image: e.target.value})} /></div>
-            <div className="md:col-span-2"><label className="admin-label">Hover image URL (optional)</label><input className="admin-input" value={editing.hover || ''} onChange={(e) => setEditing({...editing, hover: e.target.value})} /></div>
-            <div className="md:col-span-2"><label className="admin-label">Description</label><textarea rows={3} className="admin-input" value={editing.description || ''} onChange={(e) => setEditing({...editing, description: e.target.value})} /></div>
-            <div><label className="admin-label">Display order</label><input type="number" className="admin-input" value={editing.order || 0} onChange={(e) => setEditing({...editing, order: e.target.value})} /></div>
+    <CrudGrid
+      title="Product"
+      loadAll={() => fetchProducts()}
+      blank={blank}
+      create={adminCreateProduct}
+      update={adminUpdateProduct}
+      remove={adminDeleteProduct}
+      fields={productFields}
+      renderCard={(p) => (
+        <>
+          <div className="aspect-[4/5] bg-neutral-100 rounded-lg overflow-hidden mb-3">
+            {p.image && <img src={p.image} alt={p.name} className="w-full h-full object-cover" />}
           </div>
-          <div className="mt-5 flex items-center gap-3">
-            <button onClick={save} className="btn-primary" disabled={saving}><Save size={16}/> {saving ? 'Saving…' : 'Save'}</button>
-            <button onClick={() => setEditing(null)} className="text-sm font-semibold">Cancel</button>
-          </div>
-        </div>
+          <p className="text-sm font-medium line-clamp-2 min-h-[2.5em]">{p.name}</p>
+          <p className="text-xs text-neutral-500 mt-1">₹{p.price} · {p.category}</p>
+        </>
       )}
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {items.map((p) => (
-          <div key={p.id} className="admin-card !p-3">
-            <div className="aspect-[4/5] bg-neutral-100 rounded-lg overflow-hidden mb-3">
-              {p.image && <img src={p.image} alt={p.name} className="w-full h-full object-cover" />}
-            </div>
-            <p className="text-sm font-medium line-clamp-2 min-h-[2.5em]">{p.name}</p>
-            <p className="text-xs text-neutral-500 mt-1">₹{p.price} · {p.category}</p>
-            <div className="flex items-center gap-2 mt-3">
-              <button onClick={() => setEditing(p)} className="text-xs font-semibold flex items-center gap-1 text-[var(--ahps-primary)]"><Edit3 size={12}/> Edit</button>
-              <button onClick={() => del(p.id)} className="text-xs font-semibold flex items-center gap-1 text-neutral-500 hover:text-[var(--ahps-primary)]"><Trash2 size={12}/> Delete</button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    />
   );
 }
 
+// ------------- Themes tab -------------
 function ThemesTab() {
-  const [items, setItems] = useState([]);
-  const [editing, setEditing] = useState(null);
-
-  const load = async () => setItems(await fetchThemes());
-  useEffect(() => { load(); }, []);
-
-  const blank = { title: '', image: '', order: 0 };
-  const save = async () => {
-    const payload = { ...editing, order: Number(editing.order || 0) };
-    if (editing.id) await adminUpdateTheme(editing.id, payload);
-    else await adminCreateTheme(payload);
-    setEditing(null);
-    await load();
-  };
-  const del = async (id) => {
-    if (!window.confirm('Delete this theme?')) return;
-    await adminDeleteTheme(id);
-    await load();
-  };
-
+  const fields = [
+    { k: 'title', label: 'Title', full: true },
+    { k: 'image', label: 'Image URL', full: true },
+    { k: 'order', label: 'Order', type: 'number' },
+  ];
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-neutral-500">{items.length} themes</p>
-        <button onClick={() => setEditing(blank)} className="btn-primary"><Plus size={16}/> New theme</button>
-      </div>
-
-      {editing && (
-        <div className="admin-card">
-          <h3 className="font-display text-xl mb-4">{editing.id ? 'Edit' : 'New'} theme</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="md:col-span-2"><label className="admin-label">Title</label><input className="admin-input" value={editing.title} onChange={(e) => setEditing({...editing, title: e.target.value})} /></div>
-            <div className="md:col-span-2"><label className="admin-label">Image URL</label><input className="admin-input" value={editing.image} onChange={(e) => setEditing({...editing, image: e.target.value})} /></div>
-            <div><label className="admin-label">Order</label><input type="number" className="admin-input" value={editing.order || 0} onChange={(e) => setEditing({...editing, order: e.target.value})} /></div>
-          </div>
-          <div className="mt-5 flex items-center gap-3">
-            <button onClick={save} className="btn-primary"><Save size={16}/> Save</button>
-            <button onClick={() => setEditing(null)} className="text-sm font-semibold">Cancel</button>
-          </div>
-        </div>
+    <CrudGrid
+      title="Theme"
+      loadAll={fetchThemes}
+      blank={{ title: '', image: '', order: 0 }}
+      create={adminCreateTheme}
+      update={adminUpdateTheme}
+      remove={adminDeleteTheme}
+      fields={fields}
+      renderCard={(t) => (
+        <>
+          <div className="aspect-square bg-neutral-100 rounded-lg overflow-hidden mb-3"><img src={t.image} alt={t.title} className="w-full h-full object-cover" /></div>
+          <p className="text-sm font-medium">{t.title}</p>
+        </>
       )}
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {items.map((t) => (
-          <div key={t.id} className="admin-card !p-3">
-            <div className="aspect-square bg-neutral-100 rounded-lg overflow-hidden mb-3"><img src={t.image} alt={t.title} className="w-full h-full object-cover" /></div>
-            <p className="text-sm font-medium">{t.title}</p>
-            <div className="flex items-center gap-2 mt-3">
-              <button onClick={() => setEditing(t)} className="text-xs font-semibold flex items-center gap-1 text-[var(--ahps-primary)]"><Edit3 size={12}/> Edit</button>
-              <button onClick={() => del(t.id)} className="text-xs font-semibold flex items-center gap-1 text-neutral-500 hover:text-[var(--ahps-primary)]"><Trash2 size={12}/> Delete</button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    />
   );
 }
 
+// ------------- Banners tab -------------
 function BannersTab() {
-  const [items, setItems] = useState([]);
-  const [editing, setEditing] = useState(null);
-
-  const load = async () => setItems(await fetchBanners());
-  useEffect(() => { load(); }, []);
-
-  const blank = { type: 'hero', desktop: '', mobile: '', image: '', alt: '', tag: '', title: '', cta: '', order: 0 };
-  const save = async () => {
-    const payload = { ...editing, order: Number(editing.order || 0) };
-    if (editing.id) await adminUpdateBanner(editing.id, payload);
-    else await adminCreateBanner(payload);
-    setEditing(null);
-    await load();
-  };
-  const del = async (id) => {
-    if (!window.confirm('Delete this banner?')) return;
-    await adminDeleteBanner(id);
-    await load();
-  };
-
+  const fields = [
+    { k: 'type', label: 'Type', type: 'select', options: [{ v: 'hero', label: 'Hero' }, { v: 'promo', label: 'Promo' }] },
+    { k: 'order', label: 'Order', type: 'number' },
+    { k: 'desktop', label: 'Desktop image URL (hero)', full: true },
+    { k: 'mobile', label: 'Mobile image URL (hero)', full: true },
+    { k: 'image', label: 'Image URL (promo)', full: true },
+    { k: 'alt', label: 'Alt text', full: true },
+    { k: 'tag', label: 'Tag (promo)' },
+    { k: 'title', label: 'Title' },
+    { k: 'cta', label: 'CTA label' },
+  ];
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-neutral-500">{items.length} banners</p>
-        <button onClick={() => setEditing(blank)} className="btn-primary"><Plus size={16}/> New banner</button>
-      </div>
-
-      {editing && (
-        <div className="admin-card">
-          <h3 className="font-display text-xl mb-4">{editing.id ? 'Edit' : 'New'} banner</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label className="admin-label">Type</label>
-              <select className="admin-input" value={editing.type} onChange={(e) => setEditing({...editing, type: e.target.value})}>
-                <option value="hero">Hero</option>
-                <option value="promo">Promo</option>
-              </select>
-            </div>
-            <div><label className="admin-label">Order</label><input type="number" className="admin-input" value={editing.order || 0} onChange={(e) => setEditing({...editing, order: e.target.value})} /></div>
-            {editing.type === 'hero' ? (
-              <>
-                <div className="md:col-span-2"><label className="admin-label">Desktop image URL</label><input className="admin-input" value={editing.desktop || ''} onChange={(e) => setEditing({...editing, desktop: e.target.value})} /></div>
-                <div className="md:col-span-2"><label className="admin-label">Mobile image URL</label><input className="admin-input" value={editing.mobile || ''} onChange={(e) => setEditing({...editing, mobile: e.target.value})} /></div>
-                <div className="md:col-span-2"><label className="admin-label">Alt text</label><input className="admin-input" value={editing.alt || ''} onChange={(e) => setEditing({...editing, alt: e.target.value})} /></div>
-              </>
-            ) : (
-              <>
-                <div className="md:col-span-2"><label className="admin-label">Image URL</label><input className="admin-input" value={editing.image || ''} onChange={(e) => setEditing({...editing, image: e.target.value})} /></div>
-                <div><label className="admin-label">Tag</label><input className="admin-input" value={editing.tag || ''} onChange={(e) => setEditing({...editing, tag: e.target.value})} /></div>
-                <div><label className="admin-label">CTA label</label><input className="admin-input" value={editing.cta || ''} onChange={(e) => setEditing({...editing, cta: e.target.value})} /></div>
-                <div className="md:col-span-2"><label className="admin-label">Title</label><input className="admin-input" value={editing.title || ''} onChange={(e) => setEditing({...editing, title: e.target.value})} /></div>
-              </>
-            )}
+    <CrudGrid
+      title="Banner"
+      loadAll={() => fetchBanners()}
+      blank={{ type: 'hero', desktop: '', mobile: '', image: '', alt: '', tag: '', title: '', cta: '', order: 0 }}
+      create={adminCreateBanner}
+      update={adminUpdateBanner}
+      remove={adminDeleteBanner}
+      fields={fields}
+      renderCard={(b) => (
+        <>
+          <div className="aspect-[16/9] bg-neutral-100 rounded-lg overflow-hidden mb-3">
+            {(b.desktop || b.image) && <img src={b.desktop || b.image} alt={b.title || b.alt} className="w-full h-full object-cover" />}
           </div>
-          <div className="mt-5 flex items-center gap-3">
-            <button onClick={save} className="btn-primary"><Save size={16}/> Save</button>
-            <button onClick={() => setEditing(null)} className="text-sm font-semibold">Cancel</button>
-          </div>
-        </div>
+          <p className="text-xs uppercase tracking-wider font-semibold text-[var(--ahps-primary)]">{b.type}</p>
+          <p className="text-sm font-medium line-clamp-1">{b.title || b.alt || '(no title)'}</p>
+        </>
       )}
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {items.map((b) => (
-          <div key={b.id} className="admin-card !p-3">
-            <div className="aspect-[16/9] bg-neutral-100 rounded-lg overflow-hidden mb-3">
-              {(b.desktop || b.image) && <img src={b.desktop || b.image} alt={b.title || b.alt} className="w-full h-full object-cover" />}
-            </div>
-            <p className="text-xs uppercase tracking-wider font-semibold text-[var(--ahps-primary)]">{b.type}</p>
-            <p className="text-sm font-medium line-clamp-1">{b.title || b.alt || '(no title)'}</p>
-            <div className="flex items-center gap-2 mt-3">
-              <button onClick={() => setEditing(b)} className="text-xs font-semibold flex items-center gap-1 text-[var(--ahps-primary)]"><Edit3 size={12}/> Edit</button>
-              <button onClick={() => del(b.id)} className="text-xs font-semibold flex items-center gap-1 text-neutral-500 hover:text-[var(--ahps-primary)]"><Trash2 size={12}/> Delete</button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    />
   );
 }
 
+// ------------- Mentor picks tab -------------
+function MentorPicksTab() {
+  const fields = [
+    { k: 'name', label: 'Mentor name', full: true },
+    { k: 'image', label: 'Image URL', full: true },
+    { k: 'href', label: 'Link (where it opens)' },
+    { k: 'order', label: 'Order', type: 'number' },
+  ];
+  return (
+    <CrudGrid
+      title="Mentor pick"
+      loadAll={fetchMentorPicks}
+      blank={{ name: '', image: '', href: '/shop', order: 0 }}
+      create={adminCreateMentorPick}
+      update={adminUpdateMentorPick}
+      remove={adminDeleteMentorPick}
+      fields={fields}
+      renderCard={(m) => (
+        <>
+          <div className="aspect-[4/5] bg-neutral-100 rounded-lg overflow-hidden mb-3"><img src={m.image} alt={m.name} className="w-full h-full object-cover" /></div>
+          <p className="text-sm font-medium">{m.name}</p>
+        </>
+      )}
+    />
+  );
+}
+
+// ------------- Studio bookings tab -------------
+function StudiosTab() {
+  const fields = [
+    { k: 'heading', label: 'Heading', full: true },
+    { k: 'line1', label: 'Top line (e.g. "Book our Studios today")' },
+    { k: 'sub', label: 'Sub line' },
+    { k: 'cta', label: 'CTA label' },
+    { k: 'whatsapp', label: 'WhatsApp number (with country code, e.g. 917358115580)' },
+    { k: 'image', label: 'Image URL', full: true },
+    { k: 'order', label: 'Order', type: 'number' },
+  ];
+  return (
+    <CrudGrid
+      title="Studio booking"
+      loadAll={fetchStudioBookings}
+      blank={{ line1: '', heading: '', sub: '', cta: 'Book Now', image: '', whatsapp: '', order: 0 }}
+      create={adminCreateStudioBooking}
+      update={adminUpdateStudioBooking}
+      remove={adminDeleteStudioBooking}
+      fields={fields}
+      renderCard={(s) => (
+        <>
+          <div className="aspect-[3/4] bg-neutral-100 rounded-lg overflow-hidden mb-3"><img src={s.image} alt={s.heading} className="w-full h-full object-cover" /></div>
+          <p className="text-sm font-medium">{s.heading}</p>
+          <p className="text-xs text-neutral-500">{s.line1}</p>
+        </>
+      )}
+    />
+  );
+}
+
+// ------------- Stores tab -------------
+function StoresTab() {
+  const fields = [
+    { k: 'name', label: 'Store name', full: true },
+    { k: 'address', label: 'Address', type: 'textarea', full: true },
+    { k: 'phone', label: 'Phone (with country code)' },
+    { k: 'extra', label: 'Extra note (optional)' },
+    { k: 'hours', label: 'Opening hours', full: true },
+    { k: 'image', label: 'Image URL', full: true },
+  ];
+  return (
+    <CrudGrid
+      title="Store"
+      loadAll={fetchStores}
+      blank={{ name: '', image: '', address: '', phone: '', extra: '', hours: '' }}
+      create={adminCreateStore}
+      update={adminUpdateStore}
+      remove={adminDeleteStore}
+      fields={fields}
+      renderCard={(s) => (
+        <>
+          <div className="aspect-[16/9] bg-neutral-100 rounded-lg overflow-hidden mb-3"><img src={s.image} alt={s.name} className="w-full h-full object-cover" /></div>
+          <p className="text-sm font-medium line-clamp-1">{s.name}</p>
+          <p className="text-xs text-neutral-500 line-clamp-1">{s.phone}</p>
+        </>
+      )}
+    />
+  );
+}
+
+// ------------- Reviews tab -------------
+function ReviewsTab() {
+  const fields = [
+    { k: 'title', label: 'Review title', full: true },
+    { k: 'body', label: 'Review body', type: 'textarea', full: true },
+    { k: 'author', label: 'Author name' },
+    { k: 'date', label: 'Date (MM/DD/YYYY)' },
+    { k: 'stars', label: 'Stars (1–5)', type: 'number' },
+    { k: 'product', label: 'Product name (which product is this for)', full: true },
+  ];
+  return (
+    <CrudGrid
+      title="Review"
+      loadAll={fetchReviews}
+      blank={{ title: '', body: '', author: '', date: '', stars: 5, product: '' }}
+      create={adminCreateReview}
+      update={adminUpdateReview}
+      remove={adminDeleteReview}
+      fields={fields}
+      renderCard={(r) => (
+        <>
+          <div className="flex items-center gap-1 text-[var(--ahps-accent)] mb-2 text-xs">{'★'.repeat(r.stars)}{'☆'.repeat(5 - r.stars)}</div>
+          <p className="text-sm font-medium line-clamp-1">{r.title}</p>
+          <p className="text-xs text-neutral-500 line-clamp-2 mt-1">{r.body}</p>
+          <p className="text-[11px] text-neutral-400 mt-1">— {r.author}</p>
+        </>
+      )}
+    />
+  );
+}
+
+// ============= Dashboard =============
 export default function AdminDashboard() {
   const [tab, setTab] = useState(0);
   const [me, setMe] = useState(null);
   const nav = useNavigate();
 
   useEffect(() => {
-    adminMe().then(setMe).catch(() => {
-      auth.clear();
-      nav('/admin', { replace: true });
-    });
+    adminMe().then(setMe).catch(() => { auth.clear(); nav('/admin', { replace: true }); });
   }, [nav]);
 
   const logout = () => { auth.clear(); nav('/admin', { replace: true }); };
 
   if (!me) return null;
 
+  const tabComponents = [
+    SiteAndBrandTab, NavigationTab, ProductsTab, ThemesTab, BannersTab,
+    MentorPicksTab, StudiosTab, StoresTab, ReviewsTab,
+  ];
+  const ActiveTab = tabComponents[tab];
+
   return (
     <div className="admin-shell">
-      <header className="bg-white border-b border-neutral-200">
+      <header className="bg-white border-b border-neutral-200 sticky top-0 z-30">
         <div className="max-w-screen-xl mx-auto px-4 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full flex items-center justify-center font-display font-bold" style={{ background: 'var(--ahps-primary)', color: '#fff' }}>A</div>
@@ -360,12 +359,12 @@ export default function AdminDashboard() {
             <button onClick={logout} className="text-xs font-semibold flex items-center gap-1.5 text-neutral-700 hover:text-[var(--ahps-primary)]"><LogOut size={14}/> Logout</button>
           </div>
         </div>
-        <div className="max-w-screen-xl mx-auto px-4 lg:px-8 flex items-center gap-1">
+        <div className="max-w-screen-xl mx-auto px-4 lg:px-8 flex items-center gap-1 overflow-x-auto no-scrollbar">
           {TABS.map((t, idx) => (
             <button
               key={t}
               onClick={() => setTab(idx)}
-              className={`px-4 py-3 text-sm font-semibold border-b-2 transition-colors ${tab === idx ? 'border-[var(--ahps-primary)] text-[var(--ahps-primary)]' : 'border-transparent text-neutral-600 hover:text-[var(--ahps-text)]'}`}
+              className={`px-4 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${tab === idx ? 'border-[var(--ahps-primary)] text-[var(--ahps-primary)]' : 'border-transparent text-neutral-600 hover:text-[var(--ahps-text)]'}`}
             >
               {t}
             </button>
@@ -374,10 +373,7 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-screen-xl mx-auto px-4 lg:px-8 py-8">
-        {tab === 0 && <SiteAndBrandTab />}
-        {tab === 1 && <ProductsTab />}
-        {tab === 2 && <ThemesTab />}
-        {tab === 3 && <BannersTab />}
+        <ActiveTab />
       </main>
     </div>
   );

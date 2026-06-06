@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { X, ChevronDown, ChevronUp, Instagram, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { NAVIGATION } from './DesktopNav';
+import { useNavigationData } from './DesktopNav';
 
 export default function MobileMenu({ open, onClose }) {
   const [expanded, setExpanded] = useState(null);
+  const nav = useNavigationData();
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
@@ -19,19 +20,21 @@ export default function MobileMenu({ open, onClose }) {
           <span className="font-semibold text-sm uppercase tracking-wider">Try the AI Prop Stylist</span>
         </Link>
         <ul className="divide-y divide-neutral-200">
-          {NAVIGATION.filter(n => n.columns).map((n, idx) => (
-            <li key={n.label}>
+          {nav.map((n, idx) => (
+            <li key={n.id}>
               <div className="flex items-stretch">
                 <Link to={n.href} onClick={onClose} className="flex-1 px-5 py-4 text-left nav-link">{n.label}</Link>
-                <button
-                  onClick={() => setExpanded(expanded === idx ? null : idx)}
-                  className="px-4 border-l border-neutral-200"
-                  aria-label="toggle"
-                >
-                  {expanded === idx ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </button>
+                {n.columns && n.columns.length > 0 && (
+                  <button
+                    onClick={() => setExpanded(expanded === idx ? null : idx)}
+                    className="px-4 border-l border-neutral-200"
+                    aria-label="toggle"
+                  >
+                    {expanded === idx ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                  </button>
+                )}
               </div>
-              {expanded === idx && (
+              {expanded === idx && n.columns && (
                 <div className="px-5 pb-4 space-y-4 bg-white/60">
                   {n.columns.map((c) => (
                     <div key={c.title}>
