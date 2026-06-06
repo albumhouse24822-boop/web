@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { fetchProducts } from '../api';
 
@@ -8,7 +9,7 @@ export default function ProductCarousel({ title, eyebrow, category, viewAllLabel
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetchProducts(category).then(setProducts).catch(() => setProducts([]));
+    fetchProducts(category ? { category } : {}).then(setProducts).catch(() => setProducts([]));
   }, [category]);
 
   const scrollBy = (dir) => {
@@ -17,6 +18,8 @@ export default function ProductCarousel({ title, eyebrow, category, viewAllLabel
   };
 
   if (!products || products.length === 0) return null;
+
+  const viewAllHref = `/shop${category ? `?category=${category}` : ''}`;
 
   return (
     <section id={category} className="py-14 md:py-20">
@@ -39,9 +42,9 @@ export default function ProductCarousel({ title, eyebrow, category, viewAllLabel
           ))}
         </div>
         <div className="mt-10 text-center">
-          <a href="#" className="inline-block text-[12px] uppercase tracking-[0.18em] font-semibold underline underline-offset-8 decoration-2 decoration-[var(--ahps-primary)]">
+          <Link to={viewAllHref} className="inline-block text-[12px] uppercase tracking-[0.18em] font-semibold underline underline-offset-8 decoration-2 decoration-[var(--ahps-primary)]">
             {viewAllLabel}
-          </a>
+          </Link>
         </div>
       </div>
     </section>

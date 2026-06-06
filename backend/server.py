@@ -248,11 +248,13 @@ async def get_site_config():
     return SiteConfig(**cfg)
 
 @api.get("/products", response_model=List[Product])
-async def list_products(category: Optional[str] = None, limit: int = 100):
-    q: dict = {}
+async def list_products(category: Optional[str] = None, q: Optional[str] = None, limit: int = 200):
+    query: dict = {}
     if category:
-        q["category"] = category
-    docs = await db.products.find(q).sort("order", 1).to_list(limit)
+        query["category"] = category
+    if q:
+        query["name"] = {"$regex": q, "$options": "i"}
+    docs = await db.products.find(query).sort("order", 1).to_list(limit)
     return [Product(**strip_id(d)) for d in docs]
 
 @api.get("/products/{pid}", response_model=Product)

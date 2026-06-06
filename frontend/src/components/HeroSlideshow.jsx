@@ -68,9 +68,9 @@ export default function HeroSlideshow() {
                 <Link to="/quiz" className="btn-primary">
                   <Sparkles size={16} /> Try AI Prop Stylist
                 </Link>
-                <a href="#new-arrivals" className="btn-secondary">
+                <Link to="/shop?category=new-arrivals" className="btn-secondary">
                   Shop New Arrivals <ArrowRight size={16} />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

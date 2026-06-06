@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchThemes } from '../api';
 
 export default function ThemesSection() {
@@ -6,6 +7,13 @@ export default function ThemesSection() {
   useEffect(() => {
     fetchThemes().then(setThemes).catch(() => setThemes([]));
   }, []);
+
+  // Map theme title to search query keyword (first significant word)
+  const themeHref = (title) => {
+    const stop = ['theme', 'time', 'and', '&'];
+    const firstWord = title.split(/\s+/).filter((w) => !stop.includes(w.toLowerCase()))[0] || title;
+    return `/shop?q=${encodeURIComponent(firstWord)}&title=${encodeURIComponent(title)}`;
+  };
 
   return (
     <section className="py-16 md:py-24 relative overflow-hidden">
@@ -16,17 +24,17 @@ export default function ThemesSection() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {themes.map((t, idx) => (
-            <a href="#" key={t.id} className="theme-card group block">
+            <Link to={themeHref(t.title)} key={t.id} className="theme-card group block">
               <div className="relative aspect-square overflow-hidden">
                 <img src={t.image} alt={t.title} className="w-full h-full object-cover" loading="lazy" />
                 <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent" />
-                <span className="badge-corner">Bestseller</span>
+                <span className="badge-corner">Explore</span>
                 <div className="absolute bottom-3 left-4 right-4 text-white">
                   <p className="font-display text-lg md:text-xl font-medium leading-tight">{t.title}</p>
-                  <p className="text-[11px] uppercase tracking-[0.18em] mt-1 opacity-80">{String(idx + 1).padStart(2, '0')} · Explore</p>
+                  <p className="text-[11px] uppercase tracking-[0.18em] mt-1 opacity-85">{String(idx + 1).padStart(2, '0')} · Shop now</p>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

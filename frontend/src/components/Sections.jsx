@@ -5,29 +5,38 @@ import { fetchBanners, fetchMentorPicks, fetchStudioBookings, fetchStores } from
 import { useSite } from '../context/SiteContext';
 
 // ----------- Promo banners (API) -----------
+const PROMO_LINKS = {
+  'Filler Props': '/shop?q=Filler',
+  'Mini Sets Under 4999 INR': '/shop?q=Setup',
+  'The Premium Knit Collection': '/shop?q=Felted',
+};
+
 export function PromoBanners() {
   const [banners, setBanners] = useState([]);
   useEffect(() => { fetchBanners('promo').then(setBanners).catch(() => setBanners([])); }, []);
   if (!banners.length) return null;
   return (
     <section>
-      {banners.map((b, idx) => (
-        <div key={b.id} className={`relative w-full grid grid-cols-1 md:grid-cols-2 ${idx % 2 === 1 ? 'md:[direction:rtl]' : ''}`}>
-          <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[460px] overflow-hidden bg-[var(--ahps-cream)]">
-            <img src={b.image} alt={b.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-          </div>
-          <div
-            className="flex items-center justify-center p-10 md:p-16 [direction:ltr]"
-            style={{ background: idx === 0 ? 'var(--ahps-soft)' : idx === 1 ? 'var(--ahps-cream)' : 'var(--ahps-soft)' }}
-          >
-            <div className="max-w-md text-center md:text-left">
-              {b.tag && <span className="section-eyebrow">{b.tag}</span>}
-              <h3 className="font-display text-3xl md:text-5xl leading-tight mb-6">{b.title}</h3>
-              <a href="#" className="btn-primary">{b.cta || 'Shop Now'} <ArrowRight size={16}/></a>
+      {banners.map((b, idx) => {
+        const link = PROMO_LINKS[b.title] || '/shop';
+        return (
+          <div key={b.id} className={`relative w-full grid grid-cols-1 md:grid-cols-2 ${idx % 2 === 1 ? 'md:[direction:rtl]' : ''}`}>
+            <Link to={link} className="relative aspect-[16/10] md:aspect-auto md:min-h-[460px] overflow-hidden bg-[var(--ahps-cream)] group">
+              <img src={b.image} alt={b.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            </Link>
+            <div
+              className="flex items-center justify-center p-10 md:p-16 [direction:ltr]"
+              style={{ background: idx === 0 ? 'var(--ahps-soft)' : idx === 1 ? 'var(--ahps-cream)' : 'var(--ahps-soft)' }}
+            >
+              <div className="max-w-md text-center md:text-left">
+                {b.tag && <span className="section-eyebrow">{b.tag}</span>}
+                <h3 className="font-display text-3xl md:text-5xl leading-tight mb-6">{b.title}</h3>
+                <Link to={link} className="btn-primary">{b.cta || 'Shop Now'} <ArrowRight size={16}/></Link>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </section>
   );
 }
@@ -44,7 +53,7 @@ export function MentorPicks() {
         <h2 className="section-title mb-12">Shop from your <span className="accent-underline">mentor's</span> picks</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
           {picks.map((m) => (
-            <a href="#" key={m.id} className="group block">
+            <Link to="/shop" key={m.id} className="group block">
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[var(--ahps-cream)]">
                 <img src={m.image} alt={m.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/55 to-transparent" />
@@ -53,7 +62,7 @@ export function MentorPicks() {
                   <span className="inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.18em] font-semibold">Shop Now <ArrowRight size={12}/></span>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
@@ -172,18 +181,18 @@ export function QuizCta() {
 
 // ----------- Footer -----------
 const FOOTER_SHOP = [
-  { id: 'fs-1', label: 'New Arrivals' },
-  { id: 'fs-2', label: 'Newborn' },
-  { id: 'fs-3', label: 'Maternity' },
-  { id: 'fs-4', label: 'Backdrops' },
-  { id: 'fs-5', label: 'Themes' },
+  { id: 'fs-1', label: 'New Arrivals', href: '/shop?category=new-arrivals' },
+  { id: 'fs-2', label: 'Newborn', href: '/shop?category=baby' },
+  { id: 'fs-3', label: 'Maternity', href: '/shop?q=Maternity' },
+  { id: 'fs-4', label: 'Backdrops', href: '/shop?q=Backdrop' },
+  { id: 'fs-5', label: 'Themes', href: '/shop?category=ready-themes' },
 ];
 const FOOTER_INFO = [
-  { id: 'fi-1', label: 'Our Story' },
-  { id: 'fi-2', label: 'Privacy Policy' },
-  { id: 'fi-3', label: 'Shipping Policy' },
-  { id: 'fi-4', label: 'Refund Policy' },
-  { id: 'fi-5', label: 'Contact' },
+  { id: 'fi-1', label: 'Our Story', href: '/shop' },
+  { id: 'fi-2', label: 'AI Stylist', href: '/quiz' },
+  { id: 'fi-3', label: 'Shipping Policy', href: '/shop' },
+  { id: 'fi-4', label: 'Refund Policy', href: '/shop' },
+  { id: 'fi-5', label: 'Contact', href: '/shop' },
 ];
 
 function FooterBrand() {
@@ -207,7 +216,7 @@ function FooterLinkColumn({ title, links }) {
       <h4 className="text-white text-sm uppercase tracking-[0.16em] mb-4 font-semibold">{title}</h4>
       <ul className="space-y-2 text-sm">
         {links.map((l) => (
-          <li key={l.id}><a href="#" className="hover:text-white">{l.label}</a></li>
+          <li key={l.id}><Link to={l.href} className="hover:text-white">{l.label}</Link></li>
         ))}
       </ul>
     </div>

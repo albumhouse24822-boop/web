@@ -22,7 +22,8 @@ api.interceptors.request.use((config) => {
 
 // Public fetchers
 export const fetchSiteConfig = () => api.get('/site-config').then(r => r.data);
-export const fetchProducts = (category) => api.get('/products', { params: category ? { category } : {} }).then(r => r.data);
+export const fetchProducts = (params = {}) => api.get('/products', { params }).then(r => r.data);
+export const fetchProduct = (id) => api.get(`/products/${id}`).then(r => r.data);
 export const fetchThemes = () => api.get('/themes').then(r => r.data);
 export const fetchBanners = (type) => api.get('/banners', { params: type ? { type } : {} }).then(r => r.data);
 export const fetchReviews = () => api.get('/reviews').then(r => r.data);
