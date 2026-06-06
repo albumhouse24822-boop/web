@@ -6,7 +6,7 @@ export function PromoBanners() {
   return (
     <section className="divide-y divide-neutral-200">
       {promoBanners.map((b, idx) => (
-        <div key={idx} className={`relative w-full grid grid-cols-1 md:grid-cols-2 ${idx % 2 === 1 ? 'md:[direction:rtl]' : ''}`}>
+        <div key={b.id} className={`relative w-full grid grid-cols-1 md:grid-cols-2 ${idx % 2 === 1 ? 'md:[direction:rtl]' : ''}`}>
           <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[420px] overflow-hidden bg-neutral-100">
             <img src={b.image} alt={b.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
           </div>
@@ -49,8 +49,8 @@ export function MentorPicks() {
 export function StudioBookings() {
   return (
     <section className="grid grid-cols-1 md:grid-cols-3">
-      {studioBookings.map((s, idx) => (
-        <div key={idx} className="relative aspect-[3/4] md:aspect-[3/4] overflow-hidden">
+      {studioBookings.map((s) => (
+        <div key={s.id} className="relative aspect-[3/4] md:aspect-[3/4] overflow-hidden">
           <img src={s.image} alt={s.heading} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           <div className="relative h-full flex flex-col items-center justify-end text-center text-white p-8 md:p-12">
@@ -65,22 +65,25 @@ export function StudioBookings() {
   );
 }
 
+const MARQUEE_TEXT = "India's First Prop Store";
+const MARQUEE_ITEMS = Array.from({ length: 20 }, (_, i) => ({ id: `m-${i}`, text: MARQUEE_TEXT }));
+
+function MarqueeRow({ ariaHidden = false }) {
+  return (
+    <div className="flex shrink-0" aria-hidden={ariaHidden || undefined}>
+      {MARQUEE_ITEMS.map((m) => (
+        <span key={`${ariaHidden ? 'dup-' : ''}${m.id}`} className="px-6 font-serif text-2xl tracking-wide">{m.text}</span>
+      ))}
+    </div>
+  );
+}
+
 export function Marquee() {
-  const text = "India's First Prop Store";
-  const items = Array.from({ length: 20 }, () => text);
   return (
     <section className="bg-neutral-900 text-white py-6 overflow-hidden">
       <div className="flex marquee-track">
-        <div className="flex shrink-0">
-          {items.map((t, i) => (
-            <span key={i} className="px-6 font-serif text-2xl tracking-wide">{t}</span>
-          ))}
-        </div>
-        <div className="flex shrink-0" aria-hidden="true">
-          {items.map((t, i) => (
-            <span key={`d-${i}`} className="px-6 font-serif text-2xl tracking-wide">{t}</span>
-          ))}
-        </div>
+        <MarqueeRow />
+        <MarqueeRow ariaHidden />
       </div>
     </section>
   );
@@ -102,9 +105,9 @@ export function Stores() {
               <p className="text-xs text-neutral-500 mt-1">{s.extra}</p>
               <p className="text-sm text-neutral-700 mt-3">{s.hours}</p>
               <div className="flex items-center gap-3 mt-5">
-                <a href={`tel:${s.phone.replace(/[^0-9+]/g, '')}`} className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-neutral-900 hover:text-white flex items-center justify-center transition-colors" aria-label="call"><Phone size={16}/></a>
-                <a href="#" className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-neutral-900 hover:text-white flex items-center justify-center transition-colors" aria-label="video"><Video size={16}/></a>
-                <a href="#" className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-neutral-900 hover:text-white flex items-center justify-center transition-colors" aria-label="map"><MapPin size={16}/></a>
+                <a href={`tel:${s.phone.replace(/[^0-9+]/g, '')}`} className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-neutral-900 hover:text-white flex items-center justify-center transition-colors" aria-label="call"><Phone size={16} /></a>
+                <a href="#" className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-neutral-900 hover:text-white flex items-center justify-center transition-colors" aria-label="video"><Video size={16} /></a>
+                <a href="#" className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-neutral-900 hover:text-white flex items-center justify-center transition-colors" aria-label="map"><MapPin size={16} /></a>
               </div>
             </div>
           </div>
@@ -114,50 +117,77 @@ export function Stores() {
   );
 }
 
+const FOOTER_SHOP_LINKS = [
+  { id: 'fs-1', label: 'Apparels' },
+  { id: 'fs-2', label: 'Props' },
+  { id: 'fs-3', label: 'Studio Backdrops' },
+  { id: 'fs-4', label: 'Themes' },
+  { id: 'fs-5', label: 'Imported Collection' },
+];
+
+const FOOTER_INFO_LINKS = [
+  { id: 'fi-1', label: 'Meet Our Founder' },
+  { id: 'fi-2', label: 'Privacy Policy' },
+  { id: 'fi-3', label: 'Shipping Policy' },
+  { id: 'fi-4', label: 'Refund Policy' },
+  { id: 'fi-5', label: 'Contact Us' },
+];
+
+function FooterBrand() {
+  return (
+    <div className="col-span-2 md:col-span-1">
+      <h3 className="font-serif text-2xl text-white mb-4">Madras Prop Store</h3>
+      <p className="text-sm leading-relaxed">Handcrafted & handpicked photography props at premium finish, affordable pricing. India's first prop store.</p>
+      <div className="flex items-center gap-3 mt-5">
+        <a href="https://www.instagram.com/madras_prop_store/" target="_blank" rel="noreferrer" className="hover:text-white" aria-label="instagram"><Instagram size={18} /></a>
+        <a href="#" className="hover:text-white" aria-label="facebook"><Facebook size={18} /></a>
+        <a href="#" className="hover:text-white" aria-label="youtube"><Youtube size={18} /></a>
+      </div>
+    </div>
+  );
+}
+
+function FooterLinkColumn({ title, links }) {
+  return (
+    <div>
+      <h4 className="text-white text-sm uppercase tracking-[0.16em] mb-4">{title}</h4>
+      <ul className="space-y-2 text-sm">
+        {links.map((l) => (
+          <li key={l.id}><a href="#" className="hover:text-white">{l.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function FooterNewsletter() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert('Subscribed!');
+  };
+  return (
+    <div>
+      <h4 className="text-white text-sm uppercase tracking-[0.16em] mb-4">Newsletter</h4>
+      <p className="text-sm mb-3">Subscribe to get updates on new launches & exclusive offers.</p>
+      <form onSubmit={handleSubmit} className="flex">
+        <input type="email" required placeholder="Your email" className="flex-1 bg-transparent border border-neutral-700 px-3 py-2 text-sm outline-none focus:border-white" />
+        <button type="submit" className="bg-white text-neutral-900 px-4 text-xs uppercase tracking-[0.16em]">Join</button>
+      </form>
+      <div className="flex items-center gap-2 mt-5 text-xs">
+        <Mail size={14} /> info@madraspropstore.com
+      </div>
+    </div>
+  );
+}
+
 export function Footer() {
   return (
     <footer className="bg-[#1a1a1a] text-neutral-300">
       <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 py-14 grid grid-cols-2 md:grid-cols-4 gap-10">
-        <div className="col-span-2 md:col-span-1">
-          <h3 className="font-serif text-2xl text-white mb-4">Madras Prop Store</h3>
-          <p className="text-sm leading-relaxed">Handcrafted & handpicked photography props at premium finish, affordable pricing. India's first prop store.</p>
-          <div className="flex items-center gap-3 mt-5">
-            <a href="https://www.instagram.com/madras_prop_store/" target="_blank" rel="noreferrer" className="hover:text-white" aria-label="instagram"><Instagram size={18}/></a>
-            <a href="#" className="hover:text-white" aria-label="facebook"><Facebook size={18}/></a>
-            <a href="#" className="hover:text-white" aria-label="youtube"><Youtube size={18}/></a>
-          </div>
-        </div>
-        <div>
-          <h4 className="text-white text-sm uppercase tracking-[0.16em] mb-4">Shop</h4>
-          <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:text-white">Apparels</a></li>
-            <li><a href="#" className="hover:text-white">Props</a></li>
-            <li><a href="#" className="hover:text-white">Studio Backdrops</a></li>
-            <li><a href="#" className="hover:text-white">Themes</a></li>
-            <li><a href="#" className="hover:text-white">Imported Collection</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-white text-sm uppercase tracking-[0.16em] mb-4">Information</h4>
-          <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:text-white">Meet Our Founder</a></li>
-            <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-white">Shipping Policy</a></li>
-            <li><a href="#" className="hover:text-white">Refund Policy</a></li>
-            <li><a href="#" className="hover:text-white">Contact Us</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-white text-sm uppercase tracking-[0.16em] mb-4">Newsletter</h4>
-          <p className="text-sm mb-3">Subscribe to get updates on new launches & exclusive offers.</p>
-          <form onSubmit={(e) => { e.preventDefault(); alert('Subscribed!'); }} className="flex">
-            <input type="email" required placeholder="Your email" className="flex-1 bg-transparent border border-neutral-700 px-3 py-2 text-sm outline-none focus:border-white" />
-            <button type="submit" className="bg-white text-neutral-900 px-4 text-xs uppercase tracking-[0.16em]">Join</button>
-          </form>
-          <div className="flex items-center gap-2 mt-5 text-xs">
-            <Mail size={14}/> info@madraspropstore.com
-          </div>
-        </div>
+        <FooterBrand />
+        <FooterLinkColumn title="Shop" links={FOOTER_SHOP_LINKS} />
+        <FooterLinkColumn title="Information" links={FOOTER_INFO_LINKS} />
+        <FooterNewsletter />
       </div>
       <div className="border-t border-neutral-800 py-5">
         <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-neutral-500">

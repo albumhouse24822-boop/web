@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 const CartContext = createContext(null);
 
@@ -11,24 +11,39 @@ export function CartProvider({ children }) {
     localStorage.setItem('mps_cart', JSON.stringify(items));
   }, [items]);
 
-  const addItem = (product) => {
+  const removeItem = useCallback((id) => {
+    setItems((prev) => prev.filter((p) => p.id !== id));
+  }, []);
+
+  const addItem = useCallback((product) => {
     setItems((prev) => {
       const existing = prev.find((p) => p.id === product.id);
       if (existing) return prev.map((p) => p.id === product.id ? { ...p, qty: p.qty + 1 } : p);
       return [...prev, { id: product.id, name: product.name, price: product.price, image: product.image, qty: 1 }];
     });
-  };
-  const updateQty = (id, qty) => {
-    if (qty <= 0) return removeItem(id);
-    setItems((prev) => prev.map((p) => p.id === id ? { ...p, qty } : p));
-  };
-  const removeItem = (id) => setItems((prev) => prev.filter((p) => p.id !== id));
+  }, []);
 
-  const subtotal = useMemo(() => items.reduce((s, i) => s + i.price * i.qty, 0), [items]);
-  const count = useMemo(() => items.reduce((s, i) => s + i.qty, 0), [items]);
+  const updateQty = useCallback((id, qty) => {
+    if (qty <= 0) { removeItem(id); return; }
+    setItems((prev) => prev.map((p) => p.id === id ? { ...p, qty } : p));
+  }, [removeItem]);
+
+  const subtotal = useMemo(
+    () => items.reduce((sum, item) => sum + item.price * item.qty, 0),
+    [items]
+  );
+  const count = useMemo(
+    () => items.reduce((sum, item) => sum + item.qty, 0),
+    [items]
+  );
+
+  const value = useMemo(
+    () => ({ items, addItem, updateQty, removeItem, subtotal, count }),
+    [items, addItem, updateQty, removeItem, subtotal, count]
+  );
 
   return (
-    <CartContext.Provider value={{ items, addItem, updateQty, removeItem, subtotal, count }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );

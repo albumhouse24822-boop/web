@@ -1,33 +1,38 @@
 // Mock data for Madras Prop Store clone
 
 export const announcements = [
-  'FREE SHIPPING FOR ORDERS ABOVE RS. 1000! (Except "Shipping Extra" Products)',
-  'INDIA\'S FIRST PROP STORE — HANDCRAFTED & HANDPICKED PROPS',
-  'NEW ARRIVALS DROPPING WEEKLY — SHOP NEW COLLECTIONS',
+  { id: 'ann-1', text: 'FREE SHIPPING FOR ORDERS ABOVE RS. 1000! (Except "Shipping Extra" Products)' },
+  { id: 'ann-2', text: 'INDIA\'S FIRST PROP STORE — HANDCRAFTED & HANDPICKED PROPS' },
+  { id: 'ann-3', text: 'NEW ARRIVALS DROPPING WEEKLY — SHOP NEW COLLECTIONS' },
 ];
 
 export const heroSlides = [
   {
+    id: 'hero-expo-2026',
     desktop: 'https://madraspropstore.com/cdn/shop/files/MPS-EXPO-2026-WEB-BANNER-2.jpg?v=1779431196&width=2400',
     mobile: 'https://madraspropstore.com/cdn/shop/files/MPS-EXPO-2026-MOBILE-BANNER.jpg?v=1779431204&width=2160',
     alt: 'MPS Expo 2026',
   },
   {
+    id: 'hero-discount',
     desktop: 'https://madraspropstore.com/cdn/shop/files/MPS_DISCOUNT_POSTER_WEB_BANNER_2.jpg?v=1761646570&width=2400',
     mobile: 'https://madraspropstore.com/cdn/shop/files/MPS-DISCOUNT-POSTER-MOBILE-BANNER-_1.jpg?v=1761645802&width=4000',
     alt: 'Discount Poster',
   },
   {
+    id: 'hero-kumoto',
     desktop: 'https://madraspropstore.com/cdn/shop/files/KUMOTO-1800.jpg?v=1734066223&width=2400',
     mobile: 'https://madraspropstore.com/cdn/shop/files/MPS-Kumoto-Props-INSTA-POST.jpg?v=1734066223&width=2160',
     alt: 'Kumoto Collection',
   },
   {
+    id: 'hero-studio',
     desktop: 'https://madraspropstore.com/cdn/shop/files/MPS-SUCCESSFUL-STUDIO-RENDER-2_dc6c512d-2032-47ee-812e-be1d755555b4.jpg?v=1734521893&width=2400',
     mobile: 'https://madraspropstore.com/cdn/shop/files/MPS-SUCCESSFUL-STUDIO-RENDER-2-MOBILE_f80fa469-2b45-4d67-b652-004c08d5a098.jpg?v=1734521893&width=2160',
     alt: 'Successful Studio',
   },
   {
+    id: 'hero-wraps',
     desktop: 'https://madraspropstore.com/cdn/shop/files/MPS-WRAPS-OUT-NOW-BANNER.jpg?v=1714537186&width=2400',
     mobile: 'https://madraspropstore.com/cdn/shop/files/MPS-WRAPS-WEB-BANNER-PORTRAIT.jpg?v=1714537186&width=1500',
     alt: 'Wraps Out Now',
@@ -153,9 +158,9 @@ export const readyMadeThemes = [
 ];
 
 export const promoBanners = [
-  { tag: 'Under 999 INR', title: 'Filler Props', cta: 'Shop Now', image: 'https://madraspropstore.com/cdn/shop/files/IMG_9797_3233ed96-bee3-493e-90c8-e4db0fa1da91.jpg?v=1731938548&width=5040', description: '' },
-  { tag: 'Choose from our variety of budget friendly newborn sets', title: 'Mini Sets Under 4999 INR', cta: 'Grab Now', image: 'https://madraspropstore.com/cdn/shop/files/IMG_2387.jpg?v=1731938548&width=5040', description: '' },
-  { tag: 'International Collaboration', title: 'MPS x Kumoto Collection', cta: 'Shop This', image: 'https://madraspropstore.com/cdn/shop/files/IMG_9485.jpg?v=1731938548&width=5760', description: '' },
+  { id: 'promo-filler', tag: 'Under 999 INR', title: 'Filler Props', cta: 'Shop Now', image: 'https://madraspropstore.com/cdn/shop/files/IMG_9797_3233ed96-bee3-493e-90c8-e4db0fa1da91.jpg?v=1731938548&width=5040', description: '' },
+  { id: 'promo-mini', tag: 'Choose from our variety of budget friendly newborn sets', title: 'Mini Sets Under 4999 INR', cta: 'Grab Now', image: 'https://madraspropstore.com/cdn/shop/files/IMG_2387.jpg?v=1731938548&width=5040', description: '' },
+  { id: 'promo-kumoto', tag: 'International Collaboration', title: 'MPS x Kumoto Collection', cta: 'Shop This', image: 'https://madraspropstore.com/cdn/shop/files/IMG_9485.jpg?v=1731938548&width=5760', description: '' },
 ];
 
 export const mentorPicks = [
@@ -165,20 +170,20 @@ export const mentorPicks = [
 ];
 
 export const studioBookings = [
-  { line1: 'Book our Studios today', heading: 'Call 73581 15580', sub: 'at the most affordable pricing', cta: 'Book Now', image: 'https://madraspropstore.com/cdn/shop/files/Studio_6ad0a928-d660-4a9f-90eb-b6a673d35b6f.jpg?v=1732364656&width=2880', whatsapp: '917358115580' },
-  { line1: 'Rent our premium props at Chennai', heading: 'Call 73057 55580', sub: 'at the most affordable pricing', cta: 'Book Now', image: 'https://madraspropstore.com/cdn/shop/files/rental-props_9d121337-331e-4e03-8184-91d5509ab56a.jpg?v=1732365817&width=3226', whatsapp: '917305755580' },
-  { line1: 'Call 73581 15580', heading: 'to book our studios', sub: 'at the most affordable pricing', cta: 'Book Now', image: 'https://madraspropstore.com/cdn/shop/files/Midway.jpg?v=1732366781&width=1782', whatsapp: '917358115580' },
+  { id: 'studio-1', line1: 'Book our Studios today', heading: 'Call 73581 15580', sub: 'at the most affordable pricing', cta: 'Book Now', image: 'https://madraspropstore.com/cdn/shop/files/Studio_6ad0a928-d660-4a9f-90eb-b6a673d35b6f.jpg?v=1732364656&width=2880', whatsapp: '917358115580' },
+  { id: 'studio-2', line1: 'Rent our premium props at Chennai', heading: 'Call 73057 55580', sub: 'at the most affordable pricing', cta: 'Book Now', image: 'https://madraspropstore.com/cdn/shop/files/rental-props_9d121337-331e-4e03-8184-91d5509ab56a.jpg?v=1732365817&width=3226', whatsapp: '917305755580' },
+  { id: 'studio-3', line1: 'Call 73581 15580', heading: 'to book our studios', sub: 'at the most affordable pricing', cta: 'Book Now', image: 'https://madraspropstore.com/cdn/shop/files/Midway.jpg?v=1732366781&width=1782', whatsapp: '917358115580' },
 ];
 
 export const reviews = [
-  { stars: 5, title: 'The quantity is good!!', body: 'I like the product, the quality is really good.', author: 'D Sukanya Rao', date: '07/10/2024', product: 'Dark Woods - Painted Food Backdrops' },
-  { stars: 5, title: 'Fabric is too good', body: 'Final result came out so good, client loved it too. Thank you team MPS ❤', author: 'Uditi Gor', date: '07/09/2024', product: 'Boss Babe - Printed Backdrop' },
-  { stars: 5, title: 'Perfect equipment for shoot', body: 'Neat and premium look with flexible stand. Really loved it.', author: 'Davuluri Teja', date: '06/26/2024', product: 'Adjustable Bean Bag Stand + Bean Bag Combo' },
-  { stars: 5, title: 'The best', body: 'All product quality is super good.', author: 'Nitin Thorat', date: '06/24/2024', product: 'Mohair Ombre Wrap 240cm' },
-  { stars: 4, title: 'Amazing quality', body: 'The cardboard roller was stuck to the paint, but overall great quality.', author: 'Evita Pahuja', date: '06/20/2024', product: 'Chiselled Blue Rock - Painted Backdrops' },
-  { stars: 5, title: 'Print and quality is very good', body: 'Also like all your backdrops.', author: 'Gaurav Suthar', date: '06/15/2024', product: 'Bunny Trails - Baby Printed Backdrops' },
-  { stars: 5, title: 'Good Quality Good Props', body: 'I am happy. Thanks all team!', author: 'Rakesh Kumar', date: '06/13/2024', product: 'The Orchestra - Baby Backdrops' },
-  { stars: 5, title: 'Loved the fabric quality', body: 'Print and fabric quality is excellent.', author: 'Sri Valli Dandu', date: '06/10/2024', product: 'Flowers of Paradise - Fabric Backdrop' },
+  { id: 'rev-1', stars: 5, title: 'The quantity is good!!', body: 'I like the product, the quality is really good.', author: 'D Sukanya Rao', date: '07/10/2024', product: 'Dark Woods - Painted Food Backdrops' },
+  { id: 'rev-2', stars: 5, title: 'Fabric is too good', body: 'Final result came out so good, client loved it too. Thank you team MPS ❤', author: 'Uditi Gor', date: '07/09/2024', product: 'Boss Babe - Printed Backdrop' },
+  { id: 'rev-3', stars: 5, title: 'Perfect equipment for shoot', body: 'Neat and premium look with flexible stand. Really loved it.', author: 'Davuluri Teja', date: '06/26/2024', product: 'Adjustable Bean Bag Stand + Bean Bag Combo' },
+  { id: 'rev-4', stars: 5, title: 'The best', body: 'All product quality is super good.', author: 'Nitin Thorat', date: '06/24/2024', product: 'Mohair Ombre Wrap 240cm' },
+  { id: 'rev-5', stars: 4, title: 'Amazing quality', body: 'The cardboard roller was stuck to the paint, but overall great quality.', author: 'Evita Pahuja', date: '06/20/2024', product: 'Chiselled Blue Rock - Painted Backdrops' },
+  { id: 'rev-6', stars: 5, title: 'Print and quality is very good', body: 'Also like all your backdrops.', author: 'Gaurav Suthar', date: '06/15/2024', product: 'Bunny Trails - Baby Printed Backdrops' },
+  { id: 'rev-7', stars: 5, title: 'Good Quality Good Props', body: 'I am happy. Thanks all team!', author: 'Rakesh Kumar', date: '06/13/2024', product: 'The Orchestra - Baby Backdrops' },
+  { id: 'rev-8', stars: 5, title: 'Loved the fabric quality', body: 'Print and fabric quality is excellent.', author: 'Sri Valli Dandu', date: '06/10/2024', product: 'Flowers of Paradise - Fabric Backdrop' },
 ];
 
 export const stores = [
